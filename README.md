@@ -9,7 +9,7 @@ npm install backoff
 ```
 ## Usage
 
-When requiring `backoff`, you'll get the `Backoff` constructor.
+In order to use backoff, require `backoff`.
 
 ```js
 var Backoff = require('backoff');
@@ -83,14 +83,28 @@ var backoff = new Backoff({
 
 ## API
 
+### new Backoff([options])
+
+Construct a new backoff object.
+
+`options` is an object with the following defaults:
+
+```js
+options = {
+    initialTimeout: 100,
+    maxTimeout: 10000
+};
+```
+
 ### backoff.backoff()
 
-Starts a backoff operation, doubling the previous timeout. Returns true on
-success and false if a backoff was already in progress.
+Start a backoff operation, doubling the previous timeout.
+
+Returns true on success and false if a backoff was already in progress.
 
 ### backoff.reset()
 
-Resets the backoff object state. If a backoff operation is in progress when
+Reset the backoff object state. If a backoff operation is in progress when
 called, it will be stop.
 
 ### Event: 'backoff'
@@ -103,3 +117,7 @@ Emitted on backoff completion.
 ### Event: 'reset'
 
 Emitted when a backoff instance is reset.
+
+## License
+
+This code is free to use under the terms of the [MIT license](http://mturcotte.mit-license.org/).
