@@ -20,7 +20,10 @@ by listening for `backoff` events. Registered handlers will be called with the
 current backoff number and delay.
 
 ``` js
-var backoff = new Backoff();
+var backoff = new Backoff({
+    initialTimeout: 10,
+    maxTimeout: 1000
+});
 
 backoff.on('backoff', function(number, delay) {
     console.log(number + ' ' + delay + 'ms');
@@ -48,39 +51,6 @@ The previous example would print:
 10 1000ms
 ```
 
-It's also possible to reset `Backoff` instances, so that they can be reused.
-Upon reset, the `reset` event will be emitted.
-
-```js
-var backoff = new Backoff();
-
-backoff.on('backoff', function(number, delay) {
-    console.log(number + ' ' + delay + 'ms');
-    backoff.backoff();
-});
-
-backoff.on('reset', function() {
-    console.log('reset');
-});
-
-backoff.backoff();
-
-setTimeout(function() {
-    backoff.reset();
-}, 5000);
-```
-
-Optionally, one can configure the backoff `initialTimeout` and `maxTimeout`
-value.  For example, the following backoff will start with a timeout of 10 ms
-and exponentially increase its value until it reaches 1000 ms.
-
-```js
-var backoff = new Backoff({
-    initialTimeout: 10,
-    maxTimeout: 1000
-});
-```
-
 ## API
 
 ### new Backoff([options])
@@ -96,6 +66,9 @@ options = {
 };
 ```
 
+With these values, the timeout delay will exponentially increase from 100ms to
+1000ms.
+
 ### backoff.backoff()
 
 Start a backoff operation, doubling the previous timeout.
@@ -105,7 +78,7 @@ Returns true on success and false if a backoff was already in progress.
 ### backoff.reset()
 
 Reset the backoff object state. If a backoff operation is in progress when
-called, it will be stop.
+called, it will be stop. After reset, a backoff instance can be reused.
 
 ### Event: 'backoff'
 
