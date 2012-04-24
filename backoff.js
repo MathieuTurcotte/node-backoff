@@ -36,9 +36,11 @@ function ExponentialBackoff(options) {
 };
 util.inherits(ExponentialBackoff, events.EventEmitter);
 
+ExponentialBackoff.prototype.EXPONENTIAL_FACTOR = 2;
+
 ExponentialBackoff.prototype.updateBackoffDelay = function() {
     if (this.backoffDelay < this.maxTimeout) {
-        var multiplicativeFactor = Math.pow(2, this.backoffNumber);
+        var multiplicativeFactor = Math.pow(this.EXPONENTIAL_FACTOR, this.backoffNumber);
         var delay = Math.min(this.initialTimeout * multiplicativeFactor, this.maxTimeout);
         this.backoffDelay = Math.round(delay);
     }
