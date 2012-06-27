@@ -3,15 +3,11 @@
  * Licensed under the MIT license.
  */
 
-var events = require('events'),
-    util = require('util');
-
-var testCase = require('nodeunit').testCase,
-    sinon = require('sinon');
+var sinon = require('sinon');
 
 var Backoff = require('../backoff');
 
-exports["Backoff"] = testCase({
+exports["Backoff"] = {
     setUp: function(callback) {
         this.clock = sinon.useFakeTimers();
         callback();
@@ -178,4 +174,4 @@ exports["Backoff"] = testCase({
         test.ok(spy.calledWith(1, 10));
         test.done();
     }
-});
+};
