@@ -20,7 +20,7 @@ exports["Backoff"] = {
 
     "'backoff' event should be emitted on backoff completion": function(test) {
         var backoff = new Backoff({
-            initialTimeout: 10,
+            initialTimeout: 10
         });
         var spy = new sinon.spy();
         backoff.on('backoff', spy);

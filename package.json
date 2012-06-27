@@ -10,9 +10,11 @@
     },
     "devDependencies": {
         "sinon": "1.3",
-        "nodeunit": "0.7"
+        "nodeunit": "0.7",
+        "jshint": "0.7"
     },
     "scripts": {
+        "pretest": "node_modules/jshint/bin/hint *.js tests/*.js",
         "test": "node_modules/nodeunit/bin/nodeunit tests/"
     },
     "engines": {

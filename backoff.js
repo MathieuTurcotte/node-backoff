@@ -6,14 +6,18 @@
 var events = require('events'),
     util = require('util');
 
+function isDef(value) {
+    return value !== undefined && value !== null;
+}
+
 function ExponentialBackoff(options) {
     events.EventEmitter.call(this);
 
-    var options = options || {};
+    options = options || {};
 
-    if (options.initialTimeout != undefined && options.initialTimeout < 1) {
+    if (isDef(options.initialTimeout) && options.initialTimeout < 1) {
         throw new Error('The initial timeout must be greater than 0.');
-    } else if (options.maxTimeout != undefined && options.maxTimeout < 1) {
+    } else if (isDef(options.maxTimeout) && options.maxTimeout < 1) {
         throw new Error('The maximal timeout must be greater than 0.');
     }
 
@@ -33,7 +37,7 @@ function ExponentialBackoff(options) {
     this.handlers = {
         backoff: this.onBackoff.bind(this)
     };
-};
+}
 util.inherits(ExponentialBackoff, events.EventEmitter);
 
 ExponentialBackoff.prototype.EXPONENTIAL_FACTOR = 2;
