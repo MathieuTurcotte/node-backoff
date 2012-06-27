@@ -1,4 +1,4 @@
-# Exponential backoff implementation for Node.js
+# Exponential backoff implementation for Node.js [![Build Status](https://secure.travis-ci.org/MathieuTurcotte/node-backoff.png?branch=master)](http://travis-ci.org/MathieuTurcotte/node-backoff)
 
 An exponential backoff implementation for Node.js.
 
