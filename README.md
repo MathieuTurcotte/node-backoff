@@ -1,4 +1,4 @@
-# Exponential backoff implementation for Node.js [![Build Status](https://secure.travis-ci.org/MathieuTurcotte/node-backoff.png?branch=master)](http://travis-ci.org/MathieuTurcotte/node-backoff)
+# Exponential backoff for Node.js [![Build Status](https://secure.travis-ci.org/MathieuTurcotte/node-backoff.png?branch=master)](http://travis-ci.org/MathieuTurcotte/node-backoff)
 
 An exponential backoff implementation for Node.js.
 
@@ -78,7 +78,7 @@ Returns true on success and false if a backoff was already in progress.
 ### backoff.reset()
 
 Reset the backoff object state. If a backoff operation is in progress when
-called, it will be stop. After reset, a backoff instance can be reused.
+called, it will be stopped. After reset, a backoff instance can be reused.
 
 ### Event: 'backoff'
 
@@ -89,7 +89,7 @@ Emitted on backoff completion.
 
 ### Event: 'reset'
 
-Emitted when a backoff instance is reset.
+Emitted when a backoff instance is reseted.
 
 ## License
 
