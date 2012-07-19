@@ -60,7 +60,7 @@ ExponentialBackoff.prototype.backoff = function() {
     this.backoffNumber++;
 };
 
-ExponentialBackoff.prototype.onBackoff = function(delay) {
+ExponentialBackoff.prototype.onBackoff = function() {
     this.backoffInProgress = false;
     this.emit('backoff', this.backoffNumber, this.backoffDelay);
 };
