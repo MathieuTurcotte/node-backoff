@@ -51,6 +51,9 @@ The previous example would print:
 10 1000ms
 ```
 
+Backoff objects are meant to be instantiated once and reused several times
+by calling `reset` after each successful backoff operation.
+
 ## API
 
 ### new Backoff([options])
@@ -67,25 +70,34 @@ options = {
 ```
 
 With these values, the timeout delay will exponentially increase from 100ms to
-1000ms.
+10000ms.
 
 ### backoff.backoff()
 
-Start a backoff operation, doubling the previous timeout.
+Start a backoff operation, doubling the previous timeout delay. Will return
+true on success and false if a backoff operation was already in progress.
 
-Returns true on success and false if a backoff was already in progress.
+In practice, this method should be called after a failed attempt to perform a
+sensitive operation (connecting to a database, downloading a resource over the
+network, etc.).
 
 ### backoff.reset()
 
-Reset the backoff object state. If a backoff operation is in progress when
-called, it will be stopped. After reset, a backoff instance can be reused.
+Reset the timeout delay to the initial timeout value and stop any backoff
+operation in progress. After reset, a backoff instance can and should be
+reused.
+
+In practice, this method should be called after having successfully completed
+the sensitive operation guarded by the backoff instance or if the client code
+request to stop any reconnection attempt.
 
 ### Event: 'backoff'
 
 - number: number of backoff since last reset
 - delay: current backoff delay
 
-Emitted on backoff completion.
+Emitted on backoff completion, effectively signaling that the failing operation
+should be retried.
 
 ### Event: 'reset'
 
