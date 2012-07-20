@@ -101,10 +101,6 @@ request to stop any reconnection attempt.
 Emitted on backoff completion, effectively signaling that the failing operation
 should be retried.
 
-### Event: 'reset'
-
-Emitted when a backoff instance is reseted.
-
 ## License
 
 This code is free to use under the terms of the [MIT license](http://mturcotte.mit-license.org/).
