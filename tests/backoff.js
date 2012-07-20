@@ -18,7 +18,7 @@ exports["Backoff"] = {
         callback();
     },
 
-    "'backoff' event should be emitted on backoff completion": function(test) {
+    "backoff event should be emitted on backoff completion": function(test) {
         var backoff = new Backoff({
             initialTimeout: 10
         });
@@ -29,17 +29,6 @@ exports["Backoff"] = {
         this.clock.tick(10);
 
         test.ok(spy.calledOnce, 'backoff event has not been emitted');
-        test.done();
-    },
-
-    "'reset' event should be emitted on reset": function(test) {
-        var backoff = new Backoff();
-        var reset = sinon.spy();
-        backoff.on('reset', reset);
-
-        backoff.reset();
-
-        test.ok(reset.calledOnce, 'reset event has not been emitted');
         test.done();
     },
 

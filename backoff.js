@@ -66,7 +66,6 @@ Backoff.prototype.reset = function() {
     this.backoffNumber_ = 0;
     this.nextBackoffDelay_ = this.initialTimeout_;
     this.backoffDelay_ = 0;
-    this.emit('reset');
 };
 
 module.exports = Backoff;
