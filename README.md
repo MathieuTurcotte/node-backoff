@@ -1,6 +1,6 @@
-# Exponential backoff for Node.js [![Build Status](https://secure.travis-ci.org/MathieuTurcotte/node-backoff.png?branch=master)](http://travis-ci.org/MathieuTurcotte/node-backoff)
+# Backoff for Node.js [![Build Status](https://secure.travis-ci.org/MathieuTurcotte/node-backoff.png?branch=master)](http://travis-ci.org/MathieuTurcotte/node-backoff)
 
-An exponential backoff implementation for Node.js.
+Fibonnaci backoff implementation for Node.js.
 
 ## Installation
 
@@ -28,7 +28,7 @@ var backoff = new Backoff({
 backoff.on('backoff', function(number, delay) {
     console.log(number + ' ' + delay + 'ms');
 
-    if (number < 10) {
+    if (number < 12) {
         backoff.backoff();
     }
 });
@@ -40,15 +40,17 @@ The previous example would print:
 
 ```
 1 10ms
-2 20ms
-3 40ms
-4 80ms
-5 160ms
-6 320ms
-7 640ms
-8 1000ms
-9 1000ms
-10 1000ms
+2 10ms
+3 20ms
+4 30ms
+5 50ms
+6 80ms
+7 130ms
+8 210ms
+9 340ms
+10 550ms
+11 890ms
+12 1000ms
 ```
 
 Backoff objects are meant to be instantiated once and reused several times
@@ -74,8 +76,8 @@ With these values, the timeout delay will exponentially increase from 100ms to
 
 ### backoff.backoff()
 
-Start a backoff operation, doubling the previous timeout delay. Will return
-true on success and false if a backoff operation was already in progress.
+Start a backoff operation. Will throw an error if a backoff operation is already
+in progress.
 
 In practice, this method should be called after a failed attempt to perform a
 sensitive operation (connecting to a database, downloading a resource over the

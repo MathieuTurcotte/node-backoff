@@ -43,7 +43,7 @@ exports["Backoff"] = {
         test.done();
     },
 
-    "the backoff delay should increase exponentially from initialTimeout to maxTimeout": function(test) {
+    "the backoff delay should follow a Fibonacci sequence": function(test) {
         var backoff = new Backoff({
             initialTimeout: 10,
             maxTimeout: 1000
@@ -51,8 +51,9 @@ exports["Backoff"] = {
         var spy = new sinon.spy();
         backoff.on('backoff', spy);
 
+        // Fibonnaci sequence: x[i] = x[i-1] + x[i-2].
+        var delays = [10, 10, 20, 30, 50, 80, 130, 210, 340, 550, 890, 1000];
         var clock = this.clock;
-        var delays = [10, 20, 40, 80, 160, 320, 640, 1000, 1000];
 
         delays.forEach(function(delay, i) {
             backoff.backoff();

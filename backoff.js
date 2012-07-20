@@ -10,9 +10,11 @@ function isDef(value) {
     return value !== undefined && value !== null;
 }
 
-function ExponentialBackoff(options) {
+/**
+ * Fibonacci back off.
+ */
+function Backoff(options) {
     events.EventEmitter.call(this);
-
     options = options || {};
 
     if (isDef(options.initialTimeout) && options.initialTimeout < 1) {
@@ -29,49 +31,43 @@ function ExponentialBackoff(options) {
                         'than the the initial timeout.');
     }
 
-    this.backoffInProgress_ = false;
     this.backoffNumber_ = 0;
     this.backoffDelay_ = 0;
+    this.nextBackoffDelay_ = this.initialTimeout_;
     this.timeoutID_ = -1;
 
     this.handlers = {
         backoff: this.onBackoff_.bind(this)
     };
 }
-util.inherits(ExponentialBackoff, events.EventEmitter);
+util.inherits(Backoff, events.EventEmitter);
 
-ExponentialBackoff.prototype.EXPONENT = 2;
-
-ExponentialBackoff.prototype.updateBackoffDelay_ = function() {
-    if (this.backoffDelay_ < this.maxTimeout_) {
-        var factor = Math.pow(this.EXPONENT, this.backoffNumber_);
-        var delay = Math.min(this.initialTimeout_ * factor, this.maxTimeout_);
-        this.backoffDelay_ = Math.round(delay);
-    }
-};
-
-ExponentialBackoff.prototype.backoff = function() {
-    if (this.backoffInProgress_) {
+Backoff.prototype.backoff = function() {
+    if (this.timeoutID_ !== -1) {
         throw new Error('Backoff in progress.');
     }
-    this.updateBackoffDelay_();
-    this.timeoutID_ = setTimeout(this.handlers.backoff, this.backoffDelay_);
-    this.backoffInProgress_ = true;
+
+    var backoffDelay = Math.min(this.nextBackoffDelay_, this.maxTimeout_);
+    this.nextBackoffDelay_ += this.backoffDelay_;
+    this.backoffDelay_ = backoffDelay;
     this.backoffNumber_++;
+
+    this.timeoutID_ = setTimeout(this.handlers.backoff, this.backoffDelay_);
 };
 
-ExponentialBackoff.prototype.onBackoff_ = function() {
-    this.backoffInProgress_ = false;
+Backoff.prototype.onBackoff_ = function() {
+    this.timeoutID_ = -1;
     this.emit('backoff', this.backoffNumber_, this.backoffDelay_);
 };
 
-ExponentialBackoff.prototype.reset = function() {
-    this.backoffInProgress_ = false;
+Backoff.prototype.reset = function() {
     clearTimeout(this.timeoutID_);
+    this.timeoutID_ = -1;
     this.backoffNumber_ = 0;
+    this.nextBackoffDelay_ = this.initialTimeout_;
     this.backoffDelay_ = 0;
     this.emit('reset');
 };
 
-module.exports = ExponentialBackoff;
+module.exports = Backoff;
 
