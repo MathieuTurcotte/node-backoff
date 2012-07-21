@@ -28,7 +28,7 @@ function Backoff(options) {
 
     if (this.maxTimeout_ <= this.initialTimeout_) {
         throw new Error('The maximal timeout must be greater ' +
-                        'than the the initial timeout.');
+                        'than the initial timeout.');
     }
 
     this.backoffNumber_ = 0;
