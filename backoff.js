@@ -31,9 +31,18 @@ function Backoff(options) {
                         'than the initial timeout.');
     }
 
-    this.backoffNumber_ = 0;
+    if (isDef(options.randomisationFactor) &&
+        (options.randomisationFactor < 0 || options.randomisationFactor > 1)) {
+        throw new Error('The randomisation factor must be between 0 and 1.');
+    }
+
+    this.randomisationFactor_ = options.randomisationFactor || 0;
+
     this.backoffDelay_ = 0;
+    this.randomizedDelay_ = 0;
     this.nextBackoffDelay_ = this.initialTimeout_;
+
+    this.backoffNumber_ = 0;
     this.timeoutID_ = -1;
 
     this.handlers = {
@@ -47,17 +56,21 @@ Backoff.prototype.backoff = function() {
         throw new Error('Backoff in progress.');
     }
 
+    this.backoffNumber_++;
+
     var backoffDelay = Math.min(this.nextBackoffDelay_, this.maxTimeout_);
     this.nextBackoffDelay_ += this.backoffDelay_;
     this.backoffDelay_ = backoffDelay;
-    this.backoffNumber_++;
 
-    this.timeoutID_ = setTimeout(this.handlers.backoff, this.backoffDelay_);
+    var randomisationMultiple = 1 + Math.random() * this.randomisationFactor_;
+    this.randomizedDelay_ = Math.round(backoffDelay * randomisationMultiple);
+
+    this.timeoutID_ = setTimeout(this.handlers.backoff, this.randomizedDelay_);
 };
 
 Backoff.prototype.onBackoff_ = function() {
     this.timeoutID_ = -1;
-    this.emit('backoff', this.backoffNumber_, this.backoffDelay_);
+    this.emit('backoff', this.backoffNumber_, this.randomizedDelay_);
 };
 
 Backoff.prototype.reset = function() {
@@ -65,6 +78,7 @@ Backoff.prototype.reset = function() {
     this.timeoutID_ = -1;
     this.backoffNumber_ = 0;
     this.nextBackoffDelay_ = this.initialTimeout_;
+    this.randomizedDelay_ = 0;
     this.backoffDelay_ = 0;
 };
 

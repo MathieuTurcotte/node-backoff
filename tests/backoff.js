@@ -113,6 +113,28 @@ exports["Backoff"] = {
         test.done();
     },
 
+    "the randomisation factor should be between 0 and 1": function(test) {
+        test.throws(function() {
+            var backoff = new Backoff({
+                randomisationFactor: -0.1
+            });
+        });
+
+        test.throws(function() {
+            var backoff = new Backoff({
+                randomisationFactor: 1.1
+            });
+        });
+
+        test.doesNotThrow(function() {
+            var backoff = new Backoff({
+                randomisationFactor: 0.5
+            });
+        });
+
+        test.done();
+    },
+
     "call to backoff while a backoff is in progress should throw an error": function(test) {
         var backoff = new Backoff();
         backoff.backoff();
