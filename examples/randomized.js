@@ -4,8 +4,8 @@ var Backoff = require('../backoff');
 
 var backoff = new Backoff({
     randomisationFactor: 0.4,
-    initialTimeout: 10,
-    maxTimeout: 1000
+    initialDelay: 10,
+    maxDelay: 1000
 });
 
 backoff.on('backoff', function(number, delay) {

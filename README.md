@@ -21,8 +21,9 @@ current backoff number and delay.
 
 ``` js
 var backoff = new Backoff({
-    initialTimeout: 10,
-    maxTimeout: 1000
+    randomisationFactor: 0,
+    initialDelay: 10,
+    maxDelay: 1000
 });
 
 backoff.on('backoff', function(number, delay) {
@@ -66,13 +67,15 @@ Construct a new backoff object.
 
 ```js
 options = {
-    initialTimeout: 100,
-    maxTimeout: 10000
+    randomisationFactor: 0,
+    initialDelay: 100,
+    maxDelay: 10000
 };
 ```
 
-With these values, the timeout delay will exponentially increase from 100ms to
-10000ms.
+With these values, the backoff delay will increase from 100ms to 10000ms. The
+randomisation factor control the range of randomness and  must be between 0
+and 1. By default, no randomisation is applied on the backoff delay.
 
 ### backoff.backoff()
 
@@ -85,7 +88,7 @@ network, etc.).
 
 ### backoff.reset()
 
-Reset the timeout delay to the initial timeout value and stop any backoff
+Reset the backoff delay to the initial backoff delay and stop any backoff
 operation in progress. After reset, a backoff instance can and should be
 reused.
 

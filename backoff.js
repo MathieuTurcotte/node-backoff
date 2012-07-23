@@ -17,16 +17,16 @@ function Backoff(options) {
     events.EventEmitter.call(this);
     options = options || {};
 
-    if (isDef(options.initialTimeout) && options.initialTimeout < 1) {
+    if (isDef(options.initialDelay) && options.initialDelay < 1) {
         throw new Error('The initial timeout must be greater than 0.');
-    } else if (isDef(options.maxTimeout) && options.maxTimeout < 1) {
+    } else if (isDef(options.maxDelay) && options.maxDelay < 1) {
         throw new Error('The maximal timeout must be greater than 0.');
     }
 
-    this.initialTimeout_ = options.initialTimeout || 100;
-    this.maxTimeout_ = options.maxTimeout || 10000;
+    this.initialDelay_ = options.initialDelay || 100;
+    this.maxDelay_ = options.maxDelay || 10000;
 
-    if (this.maxTimeout_ <= this.initialTimeout_) {
+    if (this.maxDelay_ <= this.initialDelay_) {
         throw new Error('The maximal timeout must be greater ' +
                         'than the initial timeout.');
     }
@@ -40,7 +40,7 @@ function Backoff(options) {
 
     this.backoffDelay_ = 0;
     this.randomizedDelay_ = 0;
-    this.nextBackoffDelay_ = this.initialTimeout_;
+    this.nextBackoffDelay_ = this.initialDelay_;
 
     this.backoffNumber_ = 0;
     this.timeoutID_ = -1;
@@ -58,7 +58,7 @@ Backoff.prototype.backoff = function() {
 
     this.backoffNumber_++;
 
-    var backoffDelay = Math.min(this.nextBackoffDelay_, this.maxTimeout_);
+    var backoffDelay = Math.min(this.nextBackoffDelay_, this.maxDelay_);
     this.nextBackoffDelay_ += this.backoffDelay_;
     this.backoffDelay_ = backoffDelay;
 
@@ -77,7 +77,7 @@ Backoff.prototype.reset = function() {
     clearTimeout(this.timeoutID_);
     this.timeoutID_ = -1;
     this.backoffNumber_ = 0;
-    this.nextBackoffDelay_ = this.initialTimeout_;
+    this.nextBackoffDelay_ = this.initialDelay_;
     this.randomizedDelay_ = 0;
     this.backoffDelay_ = 0;
 };

@@ -20,7 +20,7 @@ exports["Backoff"] = {
 
     "backoff event should be emitted on backoff completion": function(test) {
         var backoff = new Backoff({
-            initialTimeout: 10
+            initialDelay: 10
         });
         var spy = new sinon.spy();
         backoff.on('backoff', spy);
@@ -34,8 +34,8 @@ exports["Backoff"] = {
 
     "the backoff delay should follow a Fibonacci sequence": function(test) {
         var backoff = new Backoff({
-            initialTimeout: 10,
-            maxTimeout: 1000
+            initialDelay: 10,
+            maxDelay: 1000
         });
         var spy = new sinon.spy();
         backoff.on('backoff', spy);
@@ -57,56 +57,56 @@ exports["Backoff"] = {
         test.done();
     },
 
-    "the initial timeout should be greater than 0": function(test) {
+    "the initial backoff delay should be greater than 0": function(test) {
         test.throws(function() {
             var backoff = new Backoff({
-                initialTimeout: -1
+                initialDelay: -1
             });
         });
 
         test.throws(function() {
             var backoff = new Backoff({
-                initialTimeout: 0
+                initialDelay: 0
             });
         });
 
         test.doesNotThrow(function() {
             var backoff = new Backoff({
-                initialTimeout: 1
+                initialDelay: 1
             });
         });
 
         test.done();
     },
 
-    "the maximal timeout should be greater than 0": function(test) {
+    "the maximal backoff delay should be greater than 0": function(test) {
         test.throws(function() {
             var backoff = new Backoff({
-                maxTimeout: -1
+                maxDelay: -1
             });
         });
 
         test.throws(function() {
             var backoff = new Backoff({
-                maxTimeout: 0
+                maxDelay: 0
             });
         });
 
         test.done();
     },
 
-    "the maximal timeout should be greater than the original timeout": function(test) {
+    "the maximal backoff delay should be greater than the initial backoff delay": function(test) {
         test.throws(function() {
             var backoff = new Backoff({
-                initialTimeout: 10,
-                maxTimeout: 10
+                initialDelay: 10,
+                maxDelay: 10
             });
         });
 
         test.doesNotThrow(function() {
             var backoff = new Backoff({
-                initialTimeout: 10,
-                maxTimeout: 11
+                initialDelay: 10,
+                maxDelay: 11
             });
         });
 
@@ -146,9 +146,9 @@ exports["Backoff"] = {
         test.done();
     },
 
-    "calling reset when a backoff is in progress should disarm the timeout": function(test) {
+    "calling reset when a backoff is in progress should cancel its execution": function(test) {
         var backoff = new Backoff({
-            initialTimeout: 10
+            initialDelay: 10
         });
 
         var spy = new sinon.spy();
@@ -159,14 +159,14 @@ exports["Backoff"] = {
         backoff.reset();
         this.clock.tick(100);   // 'backoff' should not be emitted.
 
-        test.equals(spy.callCount, 0, "backoff timeout did trigger");
+        test.equals(spy.callCount, 0, "backoff did trigger");
         test.done();
     },
 
     "it should be possible to reuse a backoff instance after reset": function(test) {
         var backoff = new Backoff({
-            initialTimeout: 10,
-            maxTimeout: 1000
+            initialDelay: 10,
+            maxDelay: 1000
         });
         var spy = new sinon.spy();
 
@@ -180,7 +180,7 @@ exports["Backoff"] = {
         backoff.on('backoff', spy);
         backoff.backoff();
 
-        // Skip the initial timeout value.
+        // Skip the initial backoff delay.
         this.clock.tick(10);
 
         test.ok(spy.calledWith(1, 10));
