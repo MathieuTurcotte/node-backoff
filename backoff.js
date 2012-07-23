@@ -27,8 +27,8 @@ function Backoff(options) {
     this.maxDelay_ = options.maxDelay || 10000;
 
     if (this.maxDelay_ <= this.initialDelay_) {
-        throw new Error('The maximal timeout must be greater ' +
-                        'than the initial timeout.');
+        throw new Error('The maximal backoff delay must be ' +
+                        'greater than the initial backoff delay.');
     }
 
     if (isDef(options.randomisationFactor) &&
