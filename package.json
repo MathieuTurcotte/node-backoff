@@ -9,7 +9,7 @@
         "url": "https://github.com/MathieuTurcotte/node-backoff.git"
     },
     "devDependencies": {
-        "sinon": "1.3",
+        "sinon": "1.4",
         "nodeunit": "0.7",
         "jshint": "0.7"
     },
