@@ -74,7 +74,7 @@ options = {
 ```
 
 With these values, the backoff delay will increase from 100ms to 10000ms. The
-randomisation factor control the range of randomness and  must be between 0
+randomisation factor controls the range of randomness and must be between 0
 and 1. By default, no randomisation is applied on the backoff delay.
 
 ### backoff.backoff()
