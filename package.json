@@ -1,7 +1,7 @@
 {
     "name": "backoff",
     "description": "Fibonnaci backoff implementation.",
-    "version": "0.0.3",
+    "version": "0.1.0",
     "author": "Mathieu Turcotte <turcotte.mat@gmail.com>",
     "keywords": ["backoff", "fibonnaci"],
     "repository": {
