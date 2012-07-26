@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-var Backoff = require('../backoff');
+var backoff = require('../index');
 
-var backoff = new Backoff();
+var backoff = backoff.exponential();
 
 backoff.on('backoff', function(number, delay) {
     console.log('backoff #' + number + ' ' + delay + 'ms');
@@ -12,13 +12,9 @@ backoff.on('backoff', function(number, delay) {
     }
 });
 
-backoff.on('reset', function() {
-    console.log('backoff reset');
-    backoff.backoff();
-});
-
 backoff.backoff();
 
-setTimeout(function() {
+setInterval(function() {
     backoff.reset();
+    backoff.backoff();
 }, 5000);

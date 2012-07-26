@@ -1,19 +1,19 @@
 #!/usr/bin/env node
 
-var Backoff = require('../backoff');
+var backoff = require('../index');
 
-var backoff = new Backoff({
+var randomizedBackoff = backoff.fibonnaci({
     randomisationFactor: 0.4,
     initialDelay: 10,
     maxDelay: 1000
 });
 
-backoff.on('backoff', function(number, delay) {
-    console.log('backoff #' + number + ' ' + delay + 'ms');
+randomizedBackoff.on('backoff', function(number, delay) {
+    console.log(number + ' ' + delay + 'ms');
 
     if (number < 15) {
-        backoff.backoff();
+        randomizedBackoff.backoff();
     }
 });
 
-backoff.backoff();
+randomizedBackoff.backoff();

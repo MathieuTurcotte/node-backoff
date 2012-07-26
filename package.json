@@ -14,11 +14,10 @@
         "jshint": "0.7"
     },
     "scripts": {
-        "pretest": "node_modules/jshint/bin/hint *.js tests/*.js",
+        "pretest": "node_modules/jshint/bin/hint lib/*.js lib/strategy/*.js tests/*.js",
         "test": "node_modules/nodeunit/bin/nodeunit tests/"
     },
     "engines": {
         "node": ">= 0.6"
-    },
-    "main": "backoff.js"
+    }
 }

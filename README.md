@@ -1,6 +1,6 @@
 # Backoff for Node.js [![Build Status](https://secure.travis-ci.org/MathieuTurcotte/node-backoff.png?branch=master)](http://travis-ci.org/MathieuTurcotte/node-backoff)
 
-Fibonnaci backoff implementation for Node.js.
+Backoff implementation for Node.js.
 
 ## Installation
 
@@ -12,46 +12,52 @@ npm install backoff
 In order to use backoff, require `backoff`.
 
 ```js
-var Backoff = require('backoff');
+var backoff = require('backoff');
 ```
+
+The usual way to instantiate a new `Backoff` object is to use one predefined
+factory method: `backoff.fibonnaci([options])`, `backoff.exponential([options])`.
 
 `Backoff` inherits from `EventEmitter`. One can listen for backoff completion
 by listening for `backoff` events. Registered handlers will be called with the
 current backoff number and delay.
 
 ``` js
-var backoff = new Backoff({
-    randomisationFactor: 0,
+var fibonnaciBackoff = backoff.fibonnaci({
     initialDelay: 10,
     maxDelay: 1000
 });
 
-backoff.on('backoff', function(number, delay) {
+fibonnaciBackoff.on('backoff', function(number, delay) {
     console.log(number + ' ' + delay + 'ms');
 
-    if (number < 12) {
-        backoff.backoff();
+    if (number < 15) {
+        fibonnaciBackoff.backoff();
     }
 });
 
-backoff.backoff();
+fibonnaciBackoff.backoff();
 ```
 
 The previous example would print:
 
 ```
+0 10ms
 1 10ms
-2 10ms
-3 20ms
-4 30ms
-5 50ms
-6 80ms
-7 130ms
-8 210ms
-9 340ms
-10 550ms
-11 890ms
+2 20ms
+3 30ms
+4 50ms
+5 80ms
+6 130ms
+7 210ms
+8 340ms
+9 550ms
+10 890ms
+11 1000ms
 12 1000ms
+13 1000ms
+14 1000ms
+15 1000ms
 ```
 
 Backoff objects are meant to be instantiated once and reused several times
@@ -59,9 +65,9 @@ by calling `reset` after each successful backoff operation.
 
 ## API
 
-### new Backoff([options])
+### backoff.exponential([options])
 
-Construct a new backoff object.
+Constructs an exponential backoff (10, 20, 40, 80, etc.).
 
 `options` is an object with the following defaults:
 
@@ -77,18 +83,33 @@ With these values, the backoff delay will increase from 100ms to 10000ms. The
 randomisation factor controls the range of randomness and must be between 0
 and 1. By default, no randomisation is applied on the backoff delay.
 
-### backoff.backoff()
+### backoff.fibonnaci([options])
 
-Start a backoff operation. Will throw an error if a backoff operation is already
-in progress.
+Constructs a Fibonnaci backoff (10, 10, 20, 30, 50, etc.).
+
+The Fibonnaci backoff has the same set of options as the exponential backoff.
+
+### Class Backoff
+
+#### new Backoff(strategy)
+
+- strategy: the backoff strategy to use
+
+Constructs a new backoff object from a specific backoff strategy. The backoff
+strategy must implement the `BackoffStrategy` interface defined bellow.
+
+#### backoff.backoff()
+
+Starts a backoff operation. Will throw an error if a backoff operation is
+already in progress.
 
 In practice, this method should be called after a failed attempt to perform a
 sensitive operation (connecting to a database, downloading a resource over the
 network, etc.).
 
-### backoff.reset()
+#### backoff.reset()
 
-Reset the backoff delay to the initial backoff delay and stop any backoff
+Resets the backoff delay to the initial backoff delay and stop any backoff
 operation in progress. After reset, a backoff instance can and should be
 reused.
 
@@ -96,13 +117,25 @@ In practice, this method should be called after having successfully completed
 the sensitive operation guarded by the backoff instance or if the client code
 request to stop any reconnection attempt.
 
-### Event: 'backoff'
+#### Event: 'backoff'
 
 - number: number of backoff since last reset
 - delay: current backoff delay
 
 Emitted on backoff completion, effectively signaling that the failing operation
 should be retried.
+
+### Interface BackoffStrategy
+
+A backoff strategy must provide the following methods.
+
+#### strategy.next()
+
+Computes and returns the next backoff delay.
+
+#### strategy.reset()
+
+Reset the backoff delay to its initial value.
 
 ## License
 

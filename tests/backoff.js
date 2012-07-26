@@ -5,10 +5,13 @@
 
 var sinon = require('sinon');
 
-var Backoff = require('../backoff');
+var Backoff = require('../lib/backoff'),
+    BackoffStrategy = require('../lib/strategy/strategy');
 
 exports["Backoff"] = {
     setUp: function(callback) {
+        this.backoffStrategy = sinon.stub(new BackoffStrategy());
+        this.backoff = new Backoff(this.backoffStrategy);
         this.clock = sinon.useFakeTimers();
         callback();
     },
@@ -18,125 +21,23 @@ exports["Backoff"] = {
         callback();
     },
 
-    "backoff event should be emitted on backoff completion": function(test) {
-        var backoff = new Backoff({
-            initialDelay: 10
-        });
-        var spy = new sinon.spy();
-        backoff.on('backoff', spy);
+    "a backoff event should be emitted on backoff completion": function(test) {
+        this.backoffStrategy.next.returns(10);
 
-        backoff.backoff();
+        var spy = new sinon.spy();
+        this.backoff.on('backoff', spy);
+
+        this.backoff.backoff();
         this.clock.tick(10);
 
-        test.ok(spy.calledOnce, 'backoff event has not been emitted');
+        test.ok(spy.calledOnce);
         test.done();
     },
 
-    "the backoff delay should follow a Fibonacci sequence": function(test) {
-        var backoff = new Backoff({
-            initialDelay: 10,
-            maxDelay: 1000
-        });
-        var spy = new sinon.spy();
-        backoff.on('backoff', spy);
+    "calling backoff while a backoff is in progress should throw an error": function(test) {
+        this.backoffStrategy.next.returns(10);
+        var backoff = this.backoff;
 
-        // Fibonnaci sequence: x[i] = x[i-1] + x[i-2].
-        var delays = [10, 10, 20, 30, 50, 80, 130, 210, 340, 550, 890, 1000];
-        var clock = this.clock;
-
-        delays.forEach(function(delay, i) {
-            backoff.backoff();
-            clock.tick(delay);
-        });
-
-        delays.forEach(function(delay, i) {
-            test.equals(spy.getCall(i).args[0], i + 1);
-            test.equals(spy.getCall(i).args[1], delay);
-        });
-
-        test.done();
-    },
-
-    "the initial backoff delay should be greater than 0": function(test) {
-        test.throws(function() {
-            var backoff = new Backoff({
-                initialDelay: -1
-            });
-        });
-
-        test.throws(function() {
-            var backoff = new Backoff({
-                initialDelay: 0
-            });
-        });
-
-        test.doesNotThrow(function() {
-            var backoff = new Backoff({
-                initialDelay: 1
-            });
-        });
-
-        test.done();
-    },
-
-    "the maximal backoff delay should be greater than 0": function(test) {
-        test.throws(function() {
-            var backoff = new Backoff({
-                maxDelay: -1
-            });
-        });
-
-        test.throws(function() {
-            var backoff = new Backoff({
-                maxDelay: 0
-            });
-        });
-
-        test.done();
-    },
-
-    "the maximal backoff delay should be greater than the initial backoff delay": function(test) {
-        test.throws(function() {
-            var backoff = new Backoff({
-                initialDelay: 10,
-                maxDelay: 10
-            });
-        });
-
-        test.doesNotThrow(function() {
-            var backoff = new Backoff({
-                initialDelay: 10,
-                maxDelay: 11
-            });
-        });
-
-        test.done();
-    },
-
-    "the randomisation factor should be between 0 and 1": function(test) {
-        test.throws(function() {
-            var backoff = new Backoff({
-                randomisationFactor: -0.1
-            });
-        });
-
-        test.throws(function() {
-            var backoff = new Backoff({
-                randomisationFactor: 1.1
-            });
-        });
-
-        test.doesNotThrow(function() {
-            var backoff = new Backoff({
-                randomisationFactor: 0.5
-            });
-        });
-
-        test.done();
-    },
-
-    "call to backoff while a backoff is in progress should throw an error": function(test) {
-        var backoff = new Backoff();
         backoff.backoff();
 
         test.throws(function() {
@@ -146,44 +47,41 @@ exports["Backoff"] = {
         test.done();
     },
 
-    "calling reset when a backoff is in progress should cancel its execution": function(test) {
-        var backoff = new Backoff({
-            initialDelay: 10
-        });
+    "reset should cancel any backoff in progress": function(test) {
+        this.backoffStrategy.next.returns(10);
 
         var spy = new sinon.spy();
-        backoff.on('backoff', spy);
+        this.backoff.on('backoff', spy);
 
-        backoff.backoff();
+        this.backoff.backoff();
 
-        backoff.reset();
+        this.backoff.reset();
         this.clock.tick(100);   // 'backoff' should not be emitted.
 
-        test.equals(spy.callCount, 0, "backoff did trigger");
+        test.equals(spy.callCount, 0);
         test.done();
     },
 
-    "it should be possible to reuse a backoff instance after reset": function(test) {
-        var backoff = new Backoff({
-            initialDelay: 10,
-            maxDelay: 1000
-        });
+    "reset should reset the backoff delay generator": function(test) {
+        this.backoff.reset();
+        test.ok(this.backoffStrategy.reset.calledOnce);
+        test.done();
+    },
+
+    "the backoff number should increase from 0 to N - 1": function(test) {
+        this.backoffStrategy.next.returns(10);
         var spy = new sinon.spy();
+        this.backoff.on('backoff', spy);
 
-        // Do a first backoff, but
-        // reset before completion.
-        backoff.backoff();
-        backoff.reset();
+        for (var i = 0; i < 10; i++) {
+            this.backoff.backoff();
+            this.clock.tick(10);
+        }
 
-        // Do another backoff, listening
-        // for its completion this time.
-        backoff.on('backoff', spy);
-        backoff.backoff();
+        for (var j = 0; j < 10; j++) {
+            test.equals(spy.getCall(j).args[0], j);
+        }
 
-        // Skip the initial backoff delay.
-        this.clock.tick(10);
-
-        test.ok(spy.calledWith(1, 10));
         test.done();
     }
 };
