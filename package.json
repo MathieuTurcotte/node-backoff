@@ -1,9 +1,9 @@
 {
     "name": "backoff",
-    "description": "Fibonnaci backoff implementation.",
-    "version": "0.1.0",
+    "description": "Exponential and Fibonnaci backoffs.",
+    "version": "0.2.0",
     "author": "Mathieu Turcotte <turcotte.mat@gmail.com>",
-    "keywords": ["backoff", "fibonnaci"],
+    "keywords": ["backoff", "fibonnaci", "exponential"],
     "repository": {
         "type": "git",
         "url": "https://github.com/MathieuTurcotte/node-backoff.git"
