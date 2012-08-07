@@ -8,6 +8,8 @@ var Backoff = require('./lib/backoff'),
     ExponentialBackoffStrategy = require('./lib/strategy/exponential');
 
 module.exports.Backoff = Backoff;
+module.exports.FibonacciStrategy = FibonacciBackoffStrategy;
+module.exports.ExponentialStrategy = ExponentialBackoffStrategy;
 
 /**
  * Constructs a Fibonacci backoff.
