@@ -16,27 +16,27 @@ var backoff = require('backoff');
 ```
 
 The usual way to instantiate a new `Backoff` object is to use one predefined
-factory method: `backoff.fibonnaci([options])`, `backoff.exponential([options])`.
+factory method: `backoff.fibonacci([options])`, `backoff.exponential([options])`.
 
 `Backoff` inherits from `EventEmitter`. One can listen for backoff completion
 by listening for `backoff` events. Registered handlers will be called with the
 current backoff number and delay.
 
 ``` js
-var fibonnaciBackoff = backoff.fibonnaci({
+var fibonacciBackoff = backoff.fibonacci({
     initialDelay: 10,
     maxDelay: 1000
 });
 
-fibonnaciBackoff.on('backoff', function(number, delay) {
+fibonacciBackoff.on('backoff', function(number, delay) {
     console.log(number + ' ' + delay + 'ms');
 
     if (number < 15) {
-        fibonnaciBackoff.backoff();
+        fibonacciBackoff.backoff();
     }
 });
 
-fibonnaciBackoff.backoff();
+fibonacciBackoff.backoff();
 ```
 
 The previous example would print:
@@ -83,11 +83,11 @@ With these values, the backoff delay will increase from 100ms to 10000ms. The
 randomisation factor controls the range of randomness and must be between 0
 and 1. By default, no randomisation is applied on the backoff delay.
 
-### backoff.fibonnaci([options])
+### backoff.fibonacci([options])
 
-Constructs a Fibonnaci backoff (10, 10, 20, 30, 50, etc.).
+Constructs a Fibonacci backoff (10, 10, 20, 30, 50, etc.).
 
-The Fibonnaci backoff has the same set of options as the exponential backoff.
+The Fibonacci backoff has the same set of options as the exponential backoff.
 
 ### Class Backoff
 

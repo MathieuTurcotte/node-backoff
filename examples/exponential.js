@@ -2,7 +2,7 @@
 
 var backoff = require('../index');
 
-var testBackoff = backoff.fibonacci({
+var testBackoff = backoff.exponential({
     initialDelay: 10,
     maxDelay: 1000
 });

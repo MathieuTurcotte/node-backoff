@@ -4,18 +4,18 @@
  */
 
 var Backoff = require('./lib/backoff'),
-    FibonnaciBackoffStrategy = require('./lib/strategy/fibonnaci'),
+    FibonacciBackoffStrategy = require('./lib/strategy/fibonacci'),
     ExponentialBackoffStrategy = require('./lib/strategy/exponential');
 
 module.exports.Backoff = Backoff;
 
 /**
- * Constructs a Fibonnaci backoff.
- * @param options Fibonnaci backoff strategy arguments.
- * @see FibonnaciBackoffStrategy
+ * Constructs a Fibonacci backoff.
+ * @param options Fibonacci backoff strategy arguments.
+ * @see FibonacciBackoffStrategy
  */
-module.exports.fibonnaci = function(options) {
-    return new Backoff(new FibonnaciBackoffStrategy(options));
+module.exports.fibonnaci = module.exports.fibonacci = function(options) {
+    return new Backoff(new FibonacciBackoffStrategy(options));
 };
 
 /**

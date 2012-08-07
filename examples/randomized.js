@@ -2,7 +2,7 @@
 
 var backoff = require('../index');
 
-var randomizedBackoff = backoff.fibonnaci({
+var randomizedBackoff = backoff.fibonacci({
     randomisationFactor: 0.4,
     initialDelay: 10,
     maxDelay: 1000
