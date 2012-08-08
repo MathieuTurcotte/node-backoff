@@ -1,6 +1,6 @@
 # Backoff for Node.js [![Build Status](https://secure.travis-ci.org/MathieuTurcotte/node-backoff.png?branch=master)](http://travis-ci.org/MathieuTurcotte/node-backoff)
 
-Backoff implementation for Node.js.
+Fibonacci and exponential backoffs for Node.js.
 
 ## Installation
 
@@ -135,7 +135,7 @@ Computes and returns the next backoff delay.
 
 #### strategy.reset()
 
-Reset the backoff delay to its initial value.
+Resets the backoff delay to its initial value.
 
 ## License
 
