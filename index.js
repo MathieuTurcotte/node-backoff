@@ -23,7 +23,7 @@ module.exports.fibonnaci = module.exports.fibonacci = function(options) {
 /**
  * Constructs an exponential backoff.
  * @param options Exponential strategy arguments.
- * @see FibonnaciBackoffStrategy
+ * @see ExponentialBackoffStrategy
  */
 module.exports.exponential = function(options) {
     return new Backoff(new ExponentialBackoffStrategy(options));
