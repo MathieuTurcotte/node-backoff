@@ -96,7 +96,7 @@ The Fibonacci backoff has the same set of options as the exponential backoff.
 - strategy: the backoff strategy to use
 
 Constructs a new backoff object from a specific backoff strategy. The backoff
-strategy must implement the `BackoffStrategy` interface defined bellow.
+strategy must implement the `BackoffStrategy`interface defined bellow.
 
 #### backoff.backoff()
 
@@ -136,6 +136,30 @@ Computes and returns the next backoff delay.
 #### strategy.reset()
 
 Resets the backoff delay to its initial value.
+
+### Class ExponentialStrategy
+
+Exponential (10, 20, 40, 80, etc.) backoff strategy implementation.
+
+#### new ExponentialStrategy([options])
+
+The options are:
+
+- randomisationFactor: defaults to 0, must be between 0 and 1
+- initialDelay: defaults to 100
+- maxDelay: defaults 10000
+
+### Class FibonacciStrategy
+
+Fibonnaci (10, 10, 20, 30, 50, etc.) backoff strategy implementation.
+
+#### new FibonacciStrategy([options])
+
+The options are:
+
+- randomisationFactor: defaults to 0, must be between 0 and 1
+- initialDelay: defaults to 100
+- maxDelay: defaults 10000
 
 ## License
 
