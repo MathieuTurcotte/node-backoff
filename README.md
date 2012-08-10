@@ -146,8 +146,8 @@ Exponential (10, 20, 40, 80, etc.) backoff strategy implementation.
 The options are:
 
 - randomisationFactor: defaults to 0, must be between 0 and 1
-- initialDelay: defaults to 100
-- maxDelay: defaults 10000
+- initialDelay: defaults to 100 ms
+- maxDelay: defaults to 10000 ms
 
 ### Class FibonacciStrategy
 
@@ -158,8 +158,8 @@ Fibonnaci (10, 10, 20, 30, 50, etc.) backoff strategy implementation.
 The options are:
 
 - randomisationFactor: defaults to 0, must be between 0 and 1
-- initialDelay: defaults to 100
-- maxDelay: defaults 10000
+- initialDelay: defaults to 100 ms
+- maxDelay: defaults to 10000 ms
 
 ## License
 
