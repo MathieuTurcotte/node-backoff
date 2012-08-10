@@ -16,8 +16,13 @@ module.exports.ExponentialStrategy = ExponentialBackoffStrategy;
  * @param options Fibonacci backoff strategy arguments.
  * @see FibonacciBackoffStrategy
  */
-module.exports.fibonnaci = module.exports.fibonacci = function(options) {
+module.exports.fibonacci = function(options) {
     return new Backoff(new FibonacciBackoffStrategy(options));
+};
+
+module.exports.fibonnaci = function(options) {
+    console.log('Deprecated: use backoff.fibonacci instead.');
+    return new module.exports.fibonacci(options);
 };
 
 /**
