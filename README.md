@@ -125,6 +125,14 @@ request to stop any reconnection attempt.
 Emitted on backoff completion, effectively signaling that the failing operation
 should be retried.
 
+#### Event: 'next'
+
+- number: number of next backoff.
+- delay: time until next backoff event.
+
+Emitted when a backoff is queued. signals how long until the 'backoff' event 
+will be emitted.
+
 ### Interface BackoffStrategy
 
 A backoff strategy must provide the following methods.
