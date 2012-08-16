@@ -4,7 +4,7 @@ var backoff = require('../index');
 
 var backoff = backoff.exponential();
 
-backoff.on('done', function(number, delay) {
+backoff.on('ready', function(number, delay) {
     console.log('Backoff done: ' + number + ' ' + delay + 'ms');
 
     if (number < 15) {

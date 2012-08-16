@@ -17,21 +17,25 @@ var backoff = require('backoff');
 The usual way to instantiate a new `Backoff` object is to use one predefined
 factory method: `backoff.fibonacci([options])`, `backoff.exponential([options])`.
 
-`Backoff` inherits from `EventEmitter`. One can listen for backoff completion
-by listening for `done` events. Registered handlers will be called with the
-current backoff number and delay.
+`Backoff` inherits from `EventEmitter`. When a backoff starts, a `backoff`
+event is emitted and, when a backoff ends, a `ready` event is emitted.
+Handlers for these two handlers will always be called with the current backoff
+number and delay.
 
 ``` js
 var fibonacciBackoff = backoff.fibonacci({
+    randomisationFactor: 0,
     initialDelay: 10,
     maxDelay: 1000
 });
 
-fibonacciBackoff.on('start', function(number, delay) {
+fibonacciBackoff.on('backoff', function(number, delay) {
+    // Do something when backoff starts.
     console.log(number + ' ' + delay + 'ms');
 });
 
-fibonacciBackoff.on('done', function(number, delay) {
+fibonacciBackoff.on('ready', function(number, delay) {
+    // Do something when backoff ends.
     if (number < 15) {
         fibonacciBackoff.backoff();
     }
@@ -66,29 +70,25 @@ by calling `reset` after each successful backoff operation.
 
 ## API
 
-### backoff.exponential([options])
-
-Constructs an exponential backoff (10, 20, 40, 80, etc.).
-
-`options` is an object with the following defaults:
-
-```js
-options = {
-    randomisationFactor: 0,
-    initialDelay: 100,
-    maxDelay: 10000
-};
-```
-
-With these values, the backoff delay will increase from 100ms to 10000ms. The
-randomisation factor controls the range of randomness and must be between 0
-and 1. By default, no randomisation is applied on the backoff delay.
-
 ### backoff.fibonacci([options])
 
 Constructs a Fibonacci backoff (10, 10, 20, 30, 50, etc.).
 
-The Fibonacci backoff has the same set of options as the exponential backoff.
+See bellow for the options description.
+
+### backoff.exponential([options])
+
+Constructs an exponential backoff (10, 20, 40, 80, etc.).
+
+The options are:
+
+- randomisationFactor: defaults to 0, must be between 0 and 1
+- initialDelay: defaults to 100 ms
+- maxDelay: defaults to 10000 ms
+
+With these values, the backoff delay will increase from 100 ms to 10000 ms. The
+randomisation factor controls the range of randomness and must be between 0
+and 1. By default, no randomisation is applied on the backoff delay.
 
 ### Class Backoff
 
@@ -118,20 +118,20 @@ In practice, this method should be called after having successfully completed
 the sensitive operation guarded by the backoff instance or if the client code
 request to stop any reconnection attempt.
 
-#### Event: 'start'
+#### Event: 'backoff'
 
-- number: number of backoffs since last reset
+- number: number of backoffs since last reset, starting at 0
 - delay: backoff delay in milliseconds
 
-Emitted when a backoff operation is started. Lets the client know how long the
-backoff delay will be before the next 'done' event is emitted.
+Emitted when a backoff operation is started. Signals to the client how long
+the next backoff delay will be.
 
-#### Event: 'done'
+#### Event: 'ready'
 
-- number: number of backoffs since last reset
+- number: number of backoffs since last reset, starting at 0
 - delay: backoff delay in milliseconds
 
-Emitted on backoff completion, effectively signaling that the failing operation
+Emitted when a backoff operation is done. Signals that the failing operation
 should be retried.
 
 ### Interface BackoffStrategy

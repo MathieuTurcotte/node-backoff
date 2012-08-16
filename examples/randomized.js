@@ -8,11 +8,11 @@ var randomizedBackoff = backoff.fibonacci({
     maxDelay: 1000
 });
 
-randomizedBackoff.on('start', function(number, delay) {
+randomizedBackoff.on('backoff', function(number, delay) {
     console.log('Backoff start: ' + number + ' ' + delay + 'ms');
 });
 
-randomizedBackoff.on('done', function(number, delay) {
+randomizedBackoff.on('ready', function(number, delay) {
     console.log('Backoff done: ' + number + ' ' + delay + 'ms');
 
     if (number < 15) {

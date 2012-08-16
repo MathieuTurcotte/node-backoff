@@ -21,11 +21,11 @@ exports["Backoff"] = {
         callback();
     },
 
-    "a start event should be emitted on backoff start": function(test) {
+    "the backoff event should be emitted when backoff starts": function(test) {
         this.backoffStrategy.next.returns(10);
 
         var spy = new sinon.spy();
-        this.backoff.on('start', spy);
+        this.backoff.on('backoff', spy);
 
         this.backoff.backoff();
 
@@ -33,16 +33,41 @@ exports["Backoff"] = {
         test.done();
     },
 
-    "a done event should be emitted on backoff completion": function(test) {
+    "the ready event should be emitted on backoff completion": function(test) {
         this.backoffStrategy.next.returns(10);
 
         var spy = new sinon.spy();
-        this.backoff.on('done', spy);
+        this.backoff.on('ready', spy);
 
         this.backoff.backoff();
         this.clock.tick(10);
 
         test.ok(spy.calledOnce);
+        test.done();
+    },
+
+    "the backoff event should be passed the backoff delay": function(test) {
+        this.backoffStrategy.next.returns(989);
+
+        var spy = new sinon.spy();
+        this.backoff.on('backoff', spy);
+
+        this.backoff.backoff();
+
+        test.equal(spy.getCall(0).args[1], 989);
+        test.done();
+    },
+
+    "the ready event should be passed the backoff delay": function(test) {
+        this.backoffStrategy.next.returns(989);
+
+        var spy = new sinon.spy();
+        this.backoff.on('ready', spy);
+
+        this.backoff.backoff();
+        this.clock.tick(989);
+
+        test.equal(spy.getCall(0).args[1], 989);
         test.done();
     },
 
@@ -63,18 +88,18 @@ exports["Backoff"] = {
         this.backoffStrategy.next.returns(10);
 
         var spy = new sinon.spy();
-        this.backoff.on('done', spy);
+        this.backoff.on('ready', spy);
 
         this.backoff.backoff();
 
         this.backoff.reset();
-        this.clock.tick(100);   // 'done' should not be emitted.
+        this.clock.tick(100);   // 'ready' should not be emitted.
 
         test.equals(spy.callCount, 0);
         test.done();
     },
 
-    "reset should reset the backoff delay generator": function(test) {
+    "reset should reset the backoff strategy": function(test) {
         this.backoff.reset();
         test.ok(this.backoffStrategy.reset.calledOnce);
         test.done();
@@ -83,7 +108,7 @@ exports["Backoff"] = {
     "the backoff number should increase from 0 to N - 1": function(test) {
         this.backoffStrategy.next.returns(10);
         var spy = new sinon.spy();
-        this.backoff.on('done', spy);
+        this.backoff.on('backoff', spy);
 
         for (var i = 0; i < 10; i++) {
             this.backoff.backoff();

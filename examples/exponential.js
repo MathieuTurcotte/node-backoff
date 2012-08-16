@@ -7,11 +7,11 @@ var testBackoff = backoff.exponential({
     maxDelay: 1000
 });
 
-testBackoff.on('start', function(number, delay) {
+testBackoff.on('backoff', function(number, delay) {
     console.log('Backoff start: ' + number + ' ' + delay + 'ms');
 });
 
-testBackoff.on('done', function(number, delay) {
+testBackoff.on('ready', function(number, delay) {
     console.log('Backoff done: ' + number + ' ' + delay + 'ms');
 
     if (number < 15) {
