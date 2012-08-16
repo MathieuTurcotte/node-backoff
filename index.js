@@ -20,11 +20,6 @@ module.exports.fibonacci = function(options) {
     return new Backoff(new FibonacciBackoffStrategy(options));
 };
 
-module.exports.fibonnaci = function(options) {
-    console.log('Deprecated: use backoff.fibonacci instead.');
-    return new module.exports.fibonacci(options);
-};
-
 /**
  * Constructs an exponential backoff.
  * @param options Exponential strategy arguments.
