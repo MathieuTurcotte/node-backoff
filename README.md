@@ -27,9 +27,11 @@ var fibonacciBackoff = backoff.fibonacci({
     maxDelay: 1000
 });
 
-fibonacciBackoff.on('done', function(number, delay) {
+fibonacciBackoff.on('start', function(number, delay) {
     console.log(number + ' ' + delay + 'ms');
+});
 
+fibonacciBackoff.on('done', function(number, delay) {
     if (number < 15) {
         fibonacciBackoff.backoff();
     }
