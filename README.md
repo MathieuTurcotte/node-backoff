@@ -19,8 +19,8 @@ factory method: `backoff.fibonacci([options])`, `backoff.exponential([options])`
 
 `Backoff` inherits from `EventEmitter`. When a backoff starts, a `backoff`
 event is emitted and, when a backoff ends, a `ready` event is emitted.
-Handlers for these two handlers will always be called with the current backoff
-number and delay.
+Handlers for these two events are called with the current backoff number and
+delay.
 
 ``` js
 var fibonacciBackoff = backoff.fibonacci({
@@ -66,7 +66,7 @@ The previous example would print:
 ```
 
 Backoff objects are meant to be instantiated once and reused several times
-by calling `reset` after each successful backoff operation.
+by calling `reset` after a successful "retry".
 
 ## API
 
