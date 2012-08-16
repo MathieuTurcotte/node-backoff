@@ -21,11 +21,23 @@ exports["Backoff"] = {
         callback();
     },
 
-    "a backoff event should be emitted on backoff completion": function(test) {
+    "a start event should be emitted on backoff start": function(test) {
         this.backoffStrategy.next.returns(10);
 
         var spy = new sinon.spy();
-        this.backoff.on('backoff', spy);
+        this.backoff.on('start', spy);
+
+        this.backoff.backoff();
+
+        test.ok(spy.calledOnce);
+        test.done();
+    },
+
+    "a done event should be emitted on backoff completion": function(test) {
+        this.backoffStrategy.next.returns(10);
+
+        var spy = new sinon.spy();
+        this.backoff.on('done', spy);
 
         this.backoff.backoff();
         this.clock.tick(10);
@@ -51,12 +63,12 @@ exports["Backoff"] = {
         this.backoffStrategy.next.returns(10);
 
         var spy = new sinon.spy();
-        this.backoff.on('backoff', spy);
+        this.backoff.on('done', spy);
 
         this.backoff.backoff();
 
         this.backoff.reset();
-        this.clock.tick(100);   // 'backoff' should not be emitted.
+        this.clock.tick(100);   // 'done' should not be emitted.
 
         test.equals(spy.callCount, 0);
         test.done();
@@ -71,7 +83,7 @@ exports["Backoff"] = {
     "the backoff number should increase from 0 to N - 1": function(test) {
         this.backoffStrategy.next.returns(10);
         var spy = new sinon.spy();
-        this.backoff.on('backoff', spy);
+        this.backoff.on('done', spy);
 
         for (var i = 0; i < 10; i++) {
             this.backoff.backoff();

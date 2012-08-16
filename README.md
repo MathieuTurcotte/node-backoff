@@ -3,7 +3,6 @@
 Fibonacci and exponential backoffs for Node.js.
 
 ## Installation
-
 ```
 npm install backoff
 ```
@@ -19,7 +18,7 @@ The usual way to instantiate a new `Backoff` object is to use one predefined
 factory method: `backoff.fibonacci([options])`, `backoff.exponential([options])`.
 
 `Backoff` inherits from `EventEmitter`. One can listen for backoff completion
-by listening for `backoff` events. Registered handlers will be called with the
+by listening for `done` events. Registered handlers will be called with the
 current backoff number and delay.
 
 ``` js
@@ -28,7 +27,7 @@ var fibonacciBackoff = backoff.fibonacci({
     maxDelay: 1000
 });
 
-fibonacciBackoff.on('backoff', function(number, delay) {
+fibonacciBackoff.on('done', function(number, delay) {
     console.log(number + ' ' + delay + 'ms');
 
     if (number < 15) {
@@ -117,10 +116,18 @@ In practice, this method should be called after having successfully completed
 the sensitive operation guarded by the backoff instance or if the client code
 request to stop any reconnection attempt.
 
-#### Event: 'backoff'
+#### Event: 'start'
 
-- number: number of backoff since last reset
-- delay: current backoff delay
+- number: number of backoffs since last reset
+- delay: backoff delay in milliseconds
+
+Emitted when a backoff operation is started. Lets the client know how long the
+backoff delay will be before the next 'done' event is emitted.
+
+#### Event: 'done'
+
+- number: number of backoffs since last reset
+- delay: backoff delay in milliseconds
 
 Emitted on backoff completion, effectively signaling that the failing operation
 should be retried.
