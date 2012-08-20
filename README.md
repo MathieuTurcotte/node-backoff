@@ -3,16 +3,18 @@
 Fibonacci and exponential backoffs for Node.js.
 
 ## Installation
+
 ```
 npm install backoff
 ```
-## Usage
 
-In order to use backoff, require `backoff`.
+## Unit tests
 
-```js
-var backoff = require('backoff');
 ```
+npm test
+```
+
+## Usage
 
 The usual way to instantiate a new `Backoff` object is to use one predefined
 factory method: `backoff.fibonacci([options])`, `backoff.exponential([options])`.
@@ -23,6 +25,8 @@ Handlers for these two events are called with the current backoff number and
 delay.
 
 ``` js
+var backoff = require('backoff');
+
 var fibonacciBackoff = backoff.fibonacci({
     randomisationFactor: 0,
     initialDelay: 10,
@@ -65,8 +69,8 @@ The previous example would print:
 15 1000ms
 ```
 
-Backoff objects are meant to be instantiated once and reused several times
-by calling `reset` after a successful "retry".
+Note that `Backoff` objects are meant to be instantiated once and reused
+several times by calling `reset` after a successful "retry".
 
 ## API
 
