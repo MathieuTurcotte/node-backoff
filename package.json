@@ -14,7 +14,7 @@
         "jshint": "0.8"
     },
     "scripts": {
-        "pretest": "node_modules/jshint/bin/hint lib/*.js lib/strategy/*.js tests/*.js examples/*.js",
+        "pretest": "node_modules/jshint/bin/hint lib/ lib/ tests/ examples/ index.js",
         "test": "node_modules/nodeunit/bin/nodeunit tests/"
     },
     "engines": {
