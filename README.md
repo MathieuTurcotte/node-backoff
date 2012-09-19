@@ -103,6 +103,15 @@ and 1. By default, no randomisation is applied on the backoff delay.
 Constructs a new backoff object from a specific backoff strategy. The backoff
 strategy must implement the `BackoffStrategy`interface defined bellow.
 
+#### backoff.failAfter(numberOfBackoffs)
+
+- numberOfBackoffs: maximum number of backoffs before the fail event gets
+emitted, must be greater than 0
+
+Sets a limit on the maximum number of backoffs that can be performed before
+a fail event gets emitted and the backoff instance is reset. By default, there
+is no limit on the number of backoffs that can be performed.
+
 #### backoff.backoff()
 
 Starts a backoff operation. Will throw an error if a backoff operation is
@@ -137,6 +146,13 @@ the next backoff delay will be.
 
 Emitted when a backoff operation is done. Signals that the failing operation
 should be retried.
+
+#### Event: 'fail'
+
+Emitted when the maximum number of backoffs is reached. This event will only
+be emitted if the client has set a limit on the number of backoffs by calling
+the `failAfter` method. The backoff instance is automatically reset after this
+event is emitted.
 
 ### Interface BackoffStrategy
 
