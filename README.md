@@ -154,8 +154,8 @@ should be retried.
 
 Emitted when the maximum number of backoffs is reached. This event will only
 be emitted if the client has set a limit on the number of backoffs by calling
-the `failAfter` method. The backoff instance is automatically reset after this
-event is emitted.
+`backoff.failAfter(numberOfBackoffs)`. The backoff instance is automatically
+reset after this event is emitted.
 
 ### Interface BackoffStrategy
 
