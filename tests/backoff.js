@@ -71,6 +71,27 @@ exports["Backoff"] = {
         test.done();
     },
 
+    "the fail event should be emitted when backoff limit is reached": function(test) {
+        this.backoffStrategy.next.returns(10);
+        var spy = new sinon.spy();
+        this.backoff.on('fail', spy);
+
+        this.backoff.failAfter(2);
+
+        // Consume first 2 backoffs.
+        for (var i = 0; i < 2; i++) {
+            this.backoff.backoff();
+            this.clock.tick(10);
+        }
+
+        // Failure should occur on the third call, and not before.
+        test.ok(!spy.calledOnce);
+        this.backoff.backoff();
+        test.ok(spy.calledOnce);
+
+        test.done();
+    },
+
     "calling backoff while a backoff is in progress should throw an error": function(test) {
         this.backoffStrategy.next.returns(10);
         var backoff = this.backoff;
@@ -81,6 +102,14 @@ exports["Backoff"] = {
             backoff.backoff();
         });
 
+        test.done();
+    },
+
+    "backoff limit should be greater than 0": function(test) {
+        var backoff = this.backoff;
+        test.throws(function() {
+            backoff.failAfter(0);
+        });
         test.done();
     },
 
@@ -101,6 +130,19 @@ exports["Backoff"] = {
 
     "reset should reset the backoff strategy": function(test) {
         this.backoff.reset();
+        test.ok(this.backoffStrategy.reset.calledOnce);
+        test.done();
+    },
+
+    "backoff should be reset after fail": function(test) {
+        this.backoffStrategy.next.returns(10);
+
+        this.backoff.failAfter(1);
+
+        this.backoff.backoff();
+        this.clock.tick(10);
+        this.backoff.backoff();
+
         test.ok(this.backoffStrategy.reset.calledOnce);
         test.done();
     },
