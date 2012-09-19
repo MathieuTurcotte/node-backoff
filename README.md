@@ -30,19 +30,27 @@ var backoff = require('backoff');
 var fibonacciBackoff = backoff.fibonacci({
     randomisationFactor: 0,
     initialDelay: 10,
-    maxDelay: 1000
+    maxDelay: 300
 });
 
+fibonacciBackoff.failAfter(10);
+
 fibonacciBackoff.on('backoff', function(number, delay) {
-    // Do something when backoff starts.
+    // Do something when backoff starts, e.g. show to the
+    // user the delay before next reconnection attempt.
     console.log(number + ' ' + delay + 'ms');
 });
 
 fibonacciBackoff.on('ready', function(number, delay) {
-    // Do something when backoff ends.
-    if (number < 15) {
-        fibonacciBackoff.backoff();
-    }
+    // Do something when backoff ends, e.g. retry a failed
+    // operation (DNS lookup, API call, etc.).
+    fibonacciBackoff.backoff();
+});
+
+fibonacciBackoff.on('fail', function() {
+    // Do something when the maximum number of backoffs is
+    // reached, e.g. ask the user to check its connection.
+    console.log('fail');
 });
 
 fibonacciBackoff.backoff();
@@ -59,14 +67,9 @@ The previous example would print:
 5 80ms
 6 130ms
 7 210ms
-8 340ms
-9 550ms
-10 890ms
-11 1000ms
-12 1000ms
-13 1000ms
-14 1000ms
-15 1000ms
+8 300ms
+9 300ms
+fail
 ```
 
 Note that `Backoff` objects are meant to be instantiated once and reused
