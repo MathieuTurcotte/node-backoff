@@ -97,6 +97,17 @@ With these values, the backoff delay will increase from 100 ms to 10000 ms. The
 randomisation factor controls the range of randomness and must be between 0
 and 1. By default, no randomisation is applied on the backoff delay.
 
+### backoff.wrap(fn, [options], [Strategy], [failAfter])
+
+- fn: function to wrap in a backoff handler
+- options: backoff strategy's options
+- Strategy: strategy constructor, defaults to `FibonacciStrategy`
+- failAfter: maximal number of backoffs, defaults to 5
+
+Wraps an asynchronous function in a backoff handler so that it gets
+automatically retried on error. Returns a new function that can be used as
+replacement for the original function.
+
 ### Class Backoff
 
 #### new Backoff(strategy)
@@ -192,6 +203,35 @@ The options are:
 - randomisationFactor: defaults to 0, must be between 0 and 1
 - initialDelay: defaults to 100 ms
 - maxDelay: defaults to 10000 ms
+
+### Class FunctionHandler
+
+This class manages the calling of an asynchronous function within a backoff
+loop.
+
+This class should rarely be instantiated directly since the factory method
+`backoff.wrap(fn, [options], [strategy], [failAfter])` offers a more convenient
+and safer way to instantiate `FunctionHandler` instances.
+
+#### new FunctionHandler(fn, backoff)
+
+- fn: asynchronous function to wrap
+- backoff: backoff instance
+
+Constructs a function handler for the given asynchronous function.
+
+#### handler.call(args)
+
+- args: array of arguments to pass to the wrapped function
+
+Calls the wrapped function, forwarding all arguments to it.
+
+The last element in the arguments array should be a callback function that
+accepts as its first argument the usual error value and as its last argument
+the array of intermediary results produced by the wrapped function.
+
+This method shouldn't be called while a previous call is still in progress and
+doing so will result in an error being thrown.
 
 ## License
 
