@@ -36,7 +36,7 @@ module.exports.exponential = function(options) {
 /**
  * Wraps a function in a backoff handler.
  * @param fn Function to wrap in a backoff handler.
- * @param options Backoff strategy's options.
+ * @param options Optional backoff strategy's options.
  * @param BackoffStrategy Optional backoff strategy's constructor, defaults
  *    to a fibonacci strategy.
  * @param failAfter Optional fail after parameter to the backoff, defaults
@@ -44,25 +44,31 @@ module.exports.exponential = function(options) {
  * @return The wrapped function.
  */
 module.exports.wrap = function(fn, options, BackoffStrategy, failAfter) {
+    if (typeof options !== 'object') {
+        BackoffStrategy = options;
+        options = undefined;
+    }
+
     if (typeof BackoffStrategy === 'number') {
         failAfter = BackoffStrategy;
         BackoffStrategy = undefined;
     }
 
+    // Overwrite with defaults.
+    BackoffStrategy = BackoffStrategy || FibonacciBackoffStrategy;
+    failAfter = failAfter || 5;
+
     // Perform up front validation to localize errors on the wrapping site
     // instead of the calling site as much as possible.
-    if (failAfter && failAfter < 1) {
+    if (failAfter < 1) {
         throw new Error('Fail after must be greater than 0. ' +
                         'Actual: ' + failAfter);
     }
 
-    if (BackoffStrategy && typeof BackoffStrategy !== 'function') {
+    if (typeof BackoffStrategy !== 'function') {
         throw new Error('The backoff strategy should be a function. ' +
                         'Actual: ' + typeof BackoffStrategy);
     }
-
-    BackoffStrategy = BackoffStrategy || FibonacciBackoffStrategy;
-    failAfter = failAfter || 5;
 
     // Defer handler's creation until the first call to the wrapped function
     // is made to make sure that calls don't share state between them.
