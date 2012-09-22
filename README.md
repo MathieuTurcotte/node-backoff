@@ -210,8 +210,8 @@ This class manages the calling of an asynchronous function within a backoff
 loop.
 
 This class should rarely be instantiated directly since the factory method
-`backoff.wrap(fn, [options], [strategy], [failAfter])` offers a more convenient
-and safer way to instantiate `FunctionHandler` instances.
+`backoff.wrap(...)` offers a more convenient and safer way to create
+`FunctionHandler` instances.
 
 #### new FunctionHandler(fn, backoff)
 
