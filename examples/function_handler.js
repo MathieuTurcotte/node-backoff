@@ -6,7 +6,9 @@ var backoff = require('../index.js');
 
 // Contruct a function which will fail on its first two calls.
 var foo = (function() {
-    var args = [[new Error('1')], [new Error('2')], [null, 'ok']];
+    var args = [[new Error('1'), null],
+                [new Error('2'), null],
+                [null, 'ok']];
 
     return function(callback) {
         callback.apply(null, args.shift());
@@ -14,11 +16,7 @@ var foo = (function() {
 }());
 
 // Wrap the unreliable function in a backoff handler.
-var fooBackoff = backoff.wrap(foo, {
-    randomizationFactor: 0.3,
-    initialDelay: 5,
-    maxDelay: 500
-}, backoff.ExponentialStrategy, 10);
+var fooBackoff = backoff.wrap(foo);
 
 // Call the wrapped function which should now succeed.
 fooBackoff(function(err, result, results) {
