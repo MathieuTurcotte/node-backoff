@@ -228,7 +228,9 @@ Calls the wrapped function, forwarding all arguments to it.
 
 The last element in the arguments array should be a callback function that
 accepts as its first argument the usual error value and as its last argument
-the array of intermediary results produced by the wrapped function.
+the array of intermediary results produced by the wrapped function (depending
+on the wrapped function's behavior, the last argument's position may change
+when an error is returned).
 
 This method shouldn't be called while a previous call is still in progress and
 doing so will result in an error being thrown.

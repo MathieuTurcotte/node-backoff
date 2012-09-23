@@ -100,14 +100,6 @@ exports["FunctionHandler"] = {
         test.done();
     },
 
-    "call should fail immediately if an error is thrown by the wrapped function": function(test) {
-        var error = new Error();
-        this.wrapped.throws(error);
-        this.handler.call([this.callback]);
-        test.ok(this.callback.calledWith(error));
-        test.done();
-    },
-
     "wrapped callback should be passed the results history as its last argument": function(test) {
         this.wrapped.yields(1);
         this.handler.call([this.callback]);
@@ -124,12 +116,23 @@ exports["FunctionHandler"] = {
         test.done();
     },
 
+    "wrapped function's errors should be propagated": function(test) {
+        this.wrapped.throws(new Error());
+        var handler = this.handler,
+            callback = this.callback;
+        test.throws(function() {
+            handler.call([callback]);
+        });
+        test.done();
+    },
+
     "wrapped callback's errors should be propagated": function(test) {
         this.wrapped.yields(null, 'Success!');
         this.callback.throws(new Error());
-        var handler = this.handler;
+        var handler = this.handler,
+            callback = this.callback;
         test.throws(function() {
-            handler.call([this.callback]);
+            handler.call([callback]);
         });
         test.done();
     }
