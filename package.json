@@ -11,7 +11,7 @@
     "devDependencies": {
         "sinon": "1.4",
         "nodeunit": "0.7",
-        "jshint": "0.9"
+        "jshint": "0.9.0"
     },
     "scripts": {
         "pretest": "node_modules/jshint/bin/hint lib/ lib/ tests/ examples/ index.js",
