@@ -97,16 +97,14 @@ With these values, the backoff delay will increase from 100 ms to 10000 ms. The
 randomisation factor controls the range of randomness and must be between 0
 and 1. By default, no randomisation is applied on the backoff delay.
 
-### backoff.wrap(fn, [options], [Strategy], [failAfter])
+### backoff.call(fn, args)
 
-- fn: function to wrap in a backoff handler
-- options: backoff strategy's options
-- Strategy: strategy constructor, defaults to `FibonacciStrategy`
-- failAfter: maximal number of backoffs, defaults to 5
+- fn: function to call in a backoff handler
+- args: function's arguments
 
-Wraps an asynchronous function in a backoff handler so that it gets
-automatically retried on error. Returns a new function that can be used as
-replacement for the original function.
+Calls an asynchronous function in a backoff handler so that it gets
+automatically retried on error. Returns a FunctionCall instance that can be
+used to configure and abort the call.
 
 ### Class Backoff
 
@@ -204,33 +202,50 @@ The options are:
 - initialDelay: defaults to 100 ms
 - maxDelay: defaults to 10000 ms
 
-### Class FunctionHandler
+### Class FunctionCall
 
 This class manages the calling of an asynchronous function within a backoff
 loop.
 
 This class should rarely be instantiated directly since the factory method
-`backoff.wrap(...)` offers a more convenient and safer way to create
-`FunctionHandler` instances.
+`backoff.call(fn, args)` offers a more convenient and safer way to create
+`FunctionCall` instances.
 
-#### new FunctionHandler(fn, backoff)
+#### new FunctionCall(fn, args, callback)
 
-- fn: asynchronous function to wrap
-- backoff: backoff instance
+- fn: asynchronous function to call
+- args: fn's args
+- callback: fn's callback
 
 Constructs a function handler for the given asynchronous function.
 
-#### handler.call(args)
+#### call.setStrategy(strategy)
 
-- args: array of arguments to pass to the wrapped function
+- strategy: backoff strategy
 
-Calls the wrapped function, forwarding all arguments to it.
+Sets the backoff strategy to use. This method should be called before the
+call is initiated.
 
-The last element in the arguments array should be a callback function that
-accepts as its first argument the usual error value and as its last argument
-the array of intermediary results produced by the wrapped function (depending
-on the wrapped function's behavior, the last argument's position may change
-when an error is returned).
+#### call.failAfter(maxNumberOfBackoffs)
+
+- maxNumberOfBackoffs: maximum number of backoffs before the call is aborted
+
+Sets the maximum number of backoffs before the call is aborted. This method
+should be called before the call is initiated.
+
+#### call.getResults()
+
+Retrieves all intermediary results returned by the wrapped function. This
+method can be called at any point during the instance lifecycle.
+
+#### call.abort()
+
+Abort the call. Past results can be retrieved using `call.getResults()`.
+
+#### call.call(backoffFactory)
+
+- backoffFactory: an optional factory function that accepts a strategy instance
+  and returns a new backoff instance
 
 This method shouldn't be called while a previous call is still in progress and
 doing so will result in an error being thrown.
