@@ -29,7 +29,8 @@ exports["Backoff"] = {
 
         this.backoff.backoff();
 
-        test.ok(spy.calledOnce);
+        test.ok(spy.calledOnce,
+            'Backoff event should be emitted when backoff starts.');
         test.done();
     },
 
@@ -42,7 +43,8 @@ exports["Backoff"] = {
         this.backoff.backoff();
         this.clock.tick(10);
 
-        test.ok(spy.calledOnce);
+        test.ok(spy.calledOnce,
+            'Ready event should be emitted when backoff ends.');
         test.done();
     },
 
@@ -54,7 +56,8 @@ exports["Backoff"] = {
 
         this.backoff.backoff();
 
-        test.equal(spy.getCall(0).args[1], 989);
+        test.equal(spy.getCall(0).args[1], 989, 'Backoff event should ' +
+            'carry the backoff delay as its second argument.');
         test.done();
     },
 
@@ -67,7 +70,8 @@ exports["Backoff"] = {
         this.backoff.backoff();
         this.clock.tick(989);
 
-        test.equal(spy.getCall(0).args[1], 989);
+        test.equal(spy.getCall(0).args[1], 989, 'Ready event should ' +
+            'carry the backoff delay as its second argument.');
         test.done();
     },
 
@@ -85,9 +89,9 @@ exports["Backoff"] = {
         }
 
         // Failure should occur on the third call, and not before.
-        test.ok(!spy.calledOnce);
+        test.ok(!spy.calledOnce, 'Fail event shouldn\'t have been emitted.');
         this.backoff.backoff();
-        test.ok(spy.calledOnce);
+        test.ok(spy.calledOnce, 'Fail event should have been emitted.');
 
         test.done();
     },
@@ -100,7 +104,7 @@ exports["Backoff"] = {
 
         test.throws(function() {
             backoff.backoff();
-        });
+        }, /in progress/);
 
         test.done();
     },
@@ -109,7 +113,7 @@ exports["Backoff"] = {
         var backoff = this.backoff;
         test.throws(function() {
             backoff.failAfter(0);
-        });
+        }, /must be greater than 0/);
         test.done();
     },
 
@@ -124,13 +128,14 @@ exports["Backoff"] = {
         this.backoff.reset();
         this.clock.tick(100);   // 'ready' should not be emitted.
 
-        test.equals(spy.callCount, 0);
+        test.equals(spy.callCount, 0, 'Reset should have aborted the backoff.');
         test.done();
     },
 
     "reset should reset the backoff strategy": function(test) {
         this.backoff.reset();
-        test.ok(this.backoffStrategy.reset.calledOnce);
+        test.ok(this.backoffStrategy.reset.calledOnce,
+            'The backoff strategy should have been resetted.');
         test.done();
     },
 
@@ -143,24 +148,27 @@ exports["Backoff"] = {
         this.clock.tick(10);
         this.backoff.backoff();
 
-        test.ok(this.backoffStrategy.reset.calledOnce);
+        test.ok(this.backoffStrategy.reset.calledOnce,
+            'Backoff should have been resetted after failure.');
         test.done();
     },
 
     "the backoff number should increase from 0 to N - 1": function(test) {
         this.backoffStrategy.next.returns(10);
+        var expectedNumbers = [0, 1, 2, 3, 4],
+            actualNumbers = [];
+
         var spy = new sinon.spy();
         this.backoff.on('backoff', spy);
 
-        for (var i = 0; i < 10; i++) {
+        for (var i = 0; i < expectedNumbers.length; i++) {
             this.backoff.backoff();
             this.clock.tick(10);
+            actualNumbers.push(spy.getCall(i).args[0]);
         }
 
-        for (var j = 0; j < 10; j++) {
-            test.equals(spy.getCall(j).args[0], j);
-        }
-
+        test.deepEqual(expectedNumbers, actualNumbers,
+            'Backoff number should increase from 0 to N - 1.');
         test.done();
     }
 };
