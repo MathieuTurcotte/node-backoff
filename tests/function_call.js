@@ -52,8 +52,8 @@ exports["FunctionCall"] = {
         call.setStrategy(replacementStrategy);
         call.call(this.backoffFactory);
         test.ok(this.backoffFactory.calledWith(replacementStrategy),
-                'User defined strategy should be used to instantiate ' +
-                'the backoff instance.');
+            'User defined strategy should be used to instantiate ' +
+            'the backoff instance.');
         test.done();
     },
 
@@ -72,8 +72,8 @@ exports["FunctionCall"] = {
         call.failAfter(failAfterValue);
         call.call(this.backoffFactory);
         test.ok(this.backoff.failAfter.calledWith(failAfterValue),
-                'User defined maximum number of backoffs shoud be ' +
-                'used to configure the backoff instance.');
+            'User defined maximum number of backoffs shoud be ' +
+            'used to configure the backoff instance.');
         test.done();
     },
 
@@ -144,8 +144,8 @@ exports["FunctionCall"] = {
         var call = new FunctionCall(this.wrappedFn, [], this.callback);
         call.abort();
         call.call(this.backoffFactory);
-        test.equals(this.wrappedFn.callCount, 0, 'Wrapped function ' +
-                    'shouldn\'t be called after abort.');
+        test.equals(this.wrappedFn.callCount, 0,
+            'Wrapped function shouldn\'t be called after abort.');
         test.done();
     },
 
@@ -157,8 +157,8 @@ exports["FunctionCall"] = {
 
         call.call(this.backoffFactory);
 
-        test.equals(this.callback.callCount, 0, 'Wrapped function\'s ' +
-                    'callback shouldn\'t be called after abort.');
+        test.equals(this.callback.callCount, 0,
+            'Wrapped function\'s callback shouldn\'t be called after abort.');
         test.done();
     },
 
@@ -195,6 +195,61 @@ exports["FunctionCall"] = {
         test.throws(function() {
             call.call(this.backoffFactory);
         }, Error);
+        test.done();
+    },
+
+    "call event should be emitted when wrapped function gets called": function(test) {
+        this.wrappedFn.yields(1);
+        var callEventSpy = sinon.spy();
+
+        var call = new FunctionCall(this.wrappedFn, [1, 'two'], this.callback);
+        call.on('call', callEventSpy);
+        call.call(this.backoffFactory);
+
+        for (var i = 1; i < 5; i++) {
+            this.backoff.emit('ready');
+        }
+
+        test.equal(5, callEventSpy.callCount,
+            'The call event should have been emitted 5 times.');
+        test.deepEqual([1, 'two'], callEventSpy.getCall(0).args,
+            'The call event should carry function\'s args.');
+        test.done();
+    },
+
+    "callback event should be emitted when callback is called": function(test) {
+        var call = new FunctionCall(this.wrappedFn, [1, 'two'], this.callback);
+        var callbackSpy = sinon.spy();
+        call.on('callback', callbackSpy);
+
+        this.wrappedFn.yields('error');
+        call.call(this.backoffFactory);
+
+        this.wrappedFn.yields(null, 'done');
+        this.backoff.emit('ready');
+
+        test.equal(2, callbackSpy.callCount,
+            'Callback event should have been emitted 2 times.');
+        test.deepEqual(['error'], callbackSpy.firstCall.args,
+            'First callback event should carry first call\'s results.');
+        test.deepEqual([null, 'done'], callbackSpy.secondCall.args,
+            'Second callback event should carry second call\'s results.');
+        test.done();
+    },
+
+    "backoff event should be emitted on backoff start": function(test) {
+        var call = new FunctionCall(this.wrappedFn, [1, 'two'], this.callback);
+        var backoffSpy = sinon.spy();
+        call.on('backoff', backoffSpy);
+
+        this.wrappedFn.yields(new Error());
+        call.call(this.backoffFactory);
+        this.backoff.emit('backoff', 3, 1234);
+
+        test.equal(1, backoffSpy.callCount,
+            'Backoff event should have been emitted 1 time.');
+        test.deepEqual([3, 1234], backoffSpy.firstCall.args,
+            'Backoff event should carry current backoff number and delay.');
         test.done();
     }
 };
