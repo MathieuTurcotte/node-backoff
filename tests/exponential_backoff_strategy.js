@@ -18,13 +18,15 @@ exports["ExponentialBackoffStrategy"] = {
 
     "backoff delays should follow an exponential sequence": function(test) {
         // Exponential sequence: x[i] = x[i-1] * 2.
-        var delays = [10, 20, 40, 80, 160, 320, 640, 1000, 1000];
+        var expectedDelays = [10, 20, 40, 80, 160, 320, 640, 1000, 1000];
+        var actualDelays = [];
 
-        delays.forEach(function(delay) {
-            var backoff = this.strategy.next();
-            test.equals(backoff, delay);
-        }, this);
+        for (var i = 0; i < expectedDelays.length; i++) {
+            actualDelays.push(this.strategy.next());
+        }
 
+        test.deepEqual(expectedDelays, actualDelays,
+            'Generated delays should follow an exponential sequence.');
         test.done();
     },
 
@@ -38,7 +40,8 @@ exports["ExponentialBackoffStrategy"] = {
         strategy.reset();
 
         var backoffDelay = strategy.next();
-        test.equals(backoffDelay, 10);
+        test.equals(backoffDelay, 10,
+            'Strategy should return the initial delay after reset.');
         test.done();
     }
 };

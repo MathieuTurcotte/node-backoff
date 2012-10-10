@@ -18,13 +18,15 @@ exports["FibonacciBackoffStrategy"] = {
 
     "backoff delays should follow a Fibonacci sequence": function(test) {
         // Fibonacci sequence: x[i] = x[i-1] + x[i-2].
-        var delays = [10, 10, 20, 30, 50, 80, 130, 210, 340, 550, 890, 1000];
+        var expectedDelays = [10, 10, 20, 30, 50, 80, 130, 210, 340, 550, 890, 1000];
+        var actualDelays = [];
 
-        delays.forEach(function(delay) {
-            var backoff = this.strategy.next();
-            test.equals(backoff, delay);
-        }, this);
+        for (var i = 0; i < expectedDelays.length; i++) {
+            actualDelays.push(this.strategy.next());
+        }
 
+        test.deepEqual(expectedDelays, actualDelays,
+            'Generated delays should follow a Fibonacci sequence.');
         test.done();
     },
 
@@ -38,7 +40,8 @@ exports["FibonacciBackoffStrategy"] = {
         strategy.reset();
 
         var backoffDelay = strategy.next();
-        test.equals(backoffDelay, 10);
+        test.equals(backoffDelay, 10,
+            'Strategy should return the initial delay after reset.');
         test.done();
     }
 };
