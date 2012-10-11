@@ -16,6 +16,8 @@ npm test
 
 ## Usage
 
+### Object Oriented
+
 The usual way to instantiate a new `Backoff` object is to use one predefined
 factory method: `backoff.fibonacci([options])`, `backoff.exponential([options])`.
 
@@ -43,7 +45,9 @@ fibonacciBackoff.on('backoff', function(number, delay) {
 
 fibonacciBackoff.on('ready', function(number, delay) {
     // Do something when backoff ends, e.g. retry a failed
-    // operation (DNS lookup, API call, etc.).
+    // operation (DNS lookup, API call, etc.). If it fails
+    // again then backoff, otherwise reset the backoff
+    // instance.
     fibonacciBackoff.backoff();
 });
 
@@ -56,7 +60,7 @@ fibonacciBackoff.on('fail', function() {
 fibonacciBackoff.backoff();
 ```
 
-The previous example would print:
+The previous example would print the following.
 
 ```
 0 10ms
@@ -75,19 +79,41 @@ fail
 Note that `Backoff` objects are meant to be instantiated once and reused
 several times by calling `reset` after a successful "retry".
 
+### Functional
+
+It's also possible to avoid some boilerplate code when invoking an asynchronous
+function in a backoff loop by using `backoff.call(fn, args)`.
+
+Typical usage looks like the following.
+
+``` js
+var call = backoff.call(get, 'https://duplika.ca/', function(err, res) {
+    console.log('Retries: ' + call.getResults().length);
+
+    if (err) {
+        console.log('Error: ' + err.message);
+    } else {
+        console.log('Status: ' + res.statusCode);
+    }
+});
+
+call.setStrategy(new backoff.ExponentialStrategy());
+call.failAfter(10);
+```
+
 ## API
 
 ### backoff.fibonacci([options])
 
 Constructs a Fibonacci backoff (10, 10, 20, 30, 50, etc.).
 
-See bellow for the options description.
+See bellow for options description.
 
 ### backoff.exponential([options])
 
 Constructs an exponential backoff (10, 20, 40, 80, etc.).
 
-The options are:
+The options are the following.
 
 - randomisationFactor: defaults to 0, must be between 0 and 1
 - initialDelay: defaults to 100 ms
@@ -96,6 +122,21 @@ The options are:
 With these values, the backoff delay will increase from 100 ms to 10000 ms. The
 randomisation factor controls the range of randomness and must be between 0
 and 1. By default, no randomisation is applied on the backoff delay.
+
+### backoff.call(fn, [args, ...], callback)
+
+- fn: function to call in a backoff handler
+- args: function's arguments
+- callback: function's callback accepting an error as its first argument
+
+Calls an asynchronous function in a backoff handler so that it gets
+automatically retried on error. The wrapped function will get retried until it
+succeds or reach the maximum number of backoffs. In both cases, the callback
+function will be invoked with the last results returned by the wrapped
+function.
+
+This function returns a `FunctionCall` instance that is going to be invoked on
+next tick and can be used to configure and/or abort the call.
 
 ### Class Backoff
 
@@ -175,7 +216,7 @@ Exponential (10, 20, 40, 80, etc.) backoff strategy implementation.
 
 #### new ExponentialStrategy([options])
 
-The options are:
+The options are the following.
 
 - randomisationFactor: defaults to 0, must be between 0 and 1
 - initialDelay: defaults to 100 ms
@@ -187,11 +228,88 @@ Fibonnaci (10, 10, 20, 30, 50, etc.) backoff strategy implementation.
 
 #### new FibonacciStrategy([options])
 
-The options are:
+The options are the following.
 
 - randomisationFactor: defaults to 0, must be between 0 and 1
 - initialDelay: defaults to 100 ms
 - maxDelay: defaults to 10000 ms
+
+### Class FunctionCall
+
+This class manages the calling of an asynchronous function within a backoff
+loop.
+
+This class should rarely be instantiated directly since the factory method
+`backoff.call(fn, [args, ...], callback)` offers a more convenient and safer
+way to create `FunctionCall` instances.
+
+#### new FunctionCall(fn, args, callback)
+
+- fn: asynchronous function to call
+- args: an array containing fn's args
+- callback: fn's callback
+
+Constructs a function handler for the given asynchronous function.
+
+#### call.setStrategy(strategy)
+
+- strategy: strategy instance to use, defaults to `FibonacciStrategy`.
+
+Sets the backoff strategy to use. This method should be called before
+`call.call()`.
+
+#### call.failAfter(maxNumberOfBackoffs)
+
+- maxNumberOfBackoffs: maximum number of backoffs before the call is aborted
+
+Sets the maximum number of backoffs before the call is aborted. This method
+should be called before `call.call()`.
+
+#### call.getResults()
+
+Retrieves all intermediary results returned by the wrapped function. This
+method can be called at any point in time during the call life cycle, i.e.
+before, during and after the wrapped function invocation.
+
+Returns an array of arrays containing the results returned by the wrapped
+function for each call. For example, to get the error code returned by the
+second call, one would do the following.
+
+``` js
+var results = call.getResults();
+var error = results[1][0];
+```
+
+#### call.call()
+
+Calls the wrapped function. This method should only be called once.
+
+#### call.abort()
+
+Aborts the call.
+
+Past results can be retrieved using `call.getResults()`. This method can be
+called at any point in time during the call life cycle, i.e. before, during
+and after the wrapped function invocation.
+
+#### Event: 'call'
+
+- args: wrapped function's arguments
+
+Emitted each time the wrapped function is called.
+
+#### Event: 'callback'
+
+- results: wrapped function's return values
+
+Emitted each time the wrapped function invoke its callback.
+
+#### Event: 'backoff'
+
+- number: backoff number, starts at 0
+- delay: backoff delay in milliseconds
+
+Emitted each time a backoff operation is started.
 
 ## License
 
