@@ -94,7 +94,7 @@
     // If `new function () { ... };` and `new Object;` should be tolerated.
     "supernew": false,
     // If variables should be declared before used.
-    "undef": false,
+    "undef": true,
     // If `this` inside a non-constructor function is valid.
     "validthis": false,
     // If smarttabs should be tolerated
