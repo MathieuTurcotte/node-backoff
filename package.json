@@ -1,7 +1,7 @@
 {
     "name": "backoff",
     "description": "Fibonacci and exponential backoffs.",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "author": "Mathieu Turcotte <turcotte.mat@gmail.com>",
     "keywords": ["backoff", "fibonacci", "exponential"],
     "repository": {
