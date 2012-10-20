@@ -13,6 +13,7 @@ exports["Backoff"] = {
         this.backoffStrategy = sinon.stub(new BackoffStrategy());
         this.backoff = new Backoff(this.backoffStrategy);
         this.clock = sinon.useFakeTimers();
+        this.spy = new sinon.spy();
         callback();
     },
 
@@ -23,62 +24,53 @@ exports["Backoff"] = {
 
     "the backoff event should be emitted when backoff starts": function(test) {
         this.backoffStrategy.next.returns(10);
-
-        var spy = new sinon.spy();
-        this.backoff.on('backoff', spy);
+        this.backoff.on('backoff', this.spy);
 
         this.backoff.backoff();
 
-        test.ok(spy.calledOnce,
+        test.ok(this.spy.calledOnce,
             'Backoff event should be emitted when backoff starts.');
         test.done();
     },
 
     "the ready event should be emitted on backoff completion": function(test) {
         this.backoffStrategy.next.returns(10);
-
-        var spy = new sinon.spy();
-        this.backoff.on('ready', spy);
+        this.backoff.on('ready', this.spy);
 
         this.backoff.backoff();
         this.clock.tick(10);
 
-        test.ok(spy.calledOnce,
+        test.ok(this.spy.calledOnce,
             'Ready event should be emitted when backoff ends.');
         test.done();
     },
 
     "the backoff event should be passed the backoff delay": function(test) {
         this.backoffStrategy.next.returns(989);
-
-        var spy = new sinon.spy();
-        this.backoff.on('backoff', spy);
+        this.backoff.on('backoff', this.spy);
 
         this.backoff.backoff();
 
-        test.equal(spy.getCall(0).args[1], 989, 'Backoff event should ' +
+        test.equal(this.spy.getCall(0).args[1], 989, 'Backoff event should ' +
             'carry the backoff delay as its second argument.');
         test.done();
     },
 
     "the ready event should be passed the backoff delay": function(test) {
         this.backoffStrategy.next.returns(989);
-
-        var spy = new sinon.spy();
-        this.backoff.on('ready', spy);
+        this.backoff.on('ready', this.spy);
 
         this.backoff.backoff();
         this.clock.tick(989);
 
-        test.equal(spy.getCall(0).args[1], 989, 'Ready event should ' +
+        test.equal(this.spy.getCall(0).args[1], 989, 'Ready event should ' +
             'carry the backoff delay as its second argument.');
         test.done();
     },
 
     "the fail event should be emitted when backoff limit is reached": function(test) {
         this.backoffStrategy.next.returns(10);
-        var spy = new sinon.spy();
-        this.backoff.on('fail', spy);
+        this.backoff.on('fail', this.spy);
 
         this.backoff.failAfter(2);
 
@@ -89,9 +81,9 @@ exports["Backoff"] = {
         }
 
         // Failure should occur on the third call, and not before.
-        test.ok(!spy.calledOnce, 'Fail event shouldn\'t have been emitted.');
+        test.ok(!this.spy.calledOnce, 'Fail event shouldn\'t have been emitted.');
         this.backoff.backoff();
-        test.ok(spy.calledOnce, 'Fail event should have been emitted.');
+        test.ok(this.spy.calledOnce, 'Fail event should have been emitted.');
 
         test.done();
     },
@@ -119,16 +111,14 @@ exports["Backoff"] = {
 
     "reset should cancel any backoff in progress": function(test) {
         this.backoffStrategy.next.returns(10);
-
-        var spy = new sinon.spy();
-        this.backoff.on('ready', spy);
+        this.backoff.on('ready', this.spy);
 
         this.backoff.backoff();
 
         this.backoff.reset();
         this.clock.tick(100);   // 'ready' should not be emitted.
 
-        test.equals(spy.callCount, 0, 'Reset should have aborted the backoff.');
+        test.equals(this.spy.callCount, 0, 'Reset should have aborted the backoff.');
         test.done();
     },
 
@@ -155,16 +145,15 @@ exports["Backoff"] = {
 
     "the backoff number should increase from 0 to N - 1": function(test) {
         this.backoffStrategy.next.returns(10);
-        var expectedNumbers = [0, 1, 2, 3, 4],
-            actualNumbers = [];
+        this.backoff.on('backoff', this.spy);
 
-        var spy = new sinon.spy();
-        this.backoff.on('backoff', spy);
+        var expectedNumbers = [0, 1, 2, 3, 4];
+        var actualNumbers = [];
 
         for (var i = 0; i < expectedNumbers.length; i++) {
             this.backoff.backoff();
             this.clock.tick(10);
-            actualNumbers.push(spy.getCall(i).args[0]);
+            actualNumbers.push(this.spy.getCall(i).args[0]);
         }
 
         test.deepEqual(expectedNumbers, actualNumbers,
