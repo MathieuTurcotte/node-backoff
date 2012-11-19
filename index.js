@@ -51,4 +51,3 @@ module.exports.call = function(fn, vargs, callback) {
 
     return call;
 };
-

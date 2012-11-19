@@ -20,4 +20,3 @@ testBackoff.on('ready', function(number, delay) {
 });
 
 testBackoff.backoff();
-
