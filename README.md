@@ -131,9 +131,8 @@ and 1. By default, no randomisation is applied on the backoff delay.
 
 Calls an asynchronous function in a backoff handler so that it gets
 automatically retried on error. The wrapped function will get retried until it
-succeds or reach the maximum number of backoffs. In both cases, the callback
-function will be invoked with the last results returned by the wrapped
-function.
+succeds or reaches the maximum number of backoffs. In both cases, the callback
+function will be invoked with the last result returned by the wrapped function.
 
 This function returns a `FunctionCall` instance that is going to be invoked on
 next tick and can be used to configure and/or abort the call.
