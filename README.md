@@ -82,7 +82,7 @@ several times by calling `reset` after a successful "retry".
 ### Functional
 
 It's also possible to avoid some boilerplate code when invoking an asynchronous
-function in a backoff loop by using `backoff.call(fn, args)`.
+function in a backoff loop by using `backoff.call(fn, [args, ...], callback)`.
 
 Typical usage looks like the following.
 
