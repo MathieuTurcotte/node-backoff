@@ -3,7 +3,7 @@
     "description": "Fibonacci and exponential backoffs.",
     "version": "1.2.0",
     "author": "Mathieu Turcotte <turcotte.mat@gmail.com>",
-    "keywords": ["backoff", "fibonacci", "exponential"],
+    "keywords": ["backoff", "retry", "fibonacci", "exponential"],
     "repository": {
         "type": "git",
         "url": "https://github.com/MathieuTurcotte/node-backoff.git"
