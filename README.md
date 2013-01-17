@@ -301,7 +301,7 @@ Emitted each time the wrapped function is called.
 
 - results: wrapped function's return values
 
-Emitted each time the wrapped function invoke its callback.
+Emitted each time the wrapped function invokes its callback.
 
 #### Event: 'backoff'
 
