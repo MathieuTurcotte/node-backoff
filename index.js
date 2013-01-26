@@ -3,10 +3,10 @@
  * Licensed under the MIT license.
  */
 
-var Backoff = require('./lib/backoff'),
-    FunctionCall = require('./lib/function_call.js'),
-    FibonacciBackoffStrategy = require('./lib/strategy/fibonacci'),
-    ExponentialBackoffStrategy = require('./lib/strategy/exponential');
+var Backoff = require('./lib/backoff');
+var ExponentialBackoffStrategy = require('./lib/strategy/exponential');
+var FibonacciBackoffStrategy = require('./lib/strategy/fibonacci');
+var FunctionCall = require('./lib/function_call.js');
 
 module.exports.Backoff = Backoff;
 module.exports.FunctionCall = FunctionCall;

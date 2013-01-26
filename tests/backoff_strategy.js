@@ -3,8 +3,8 @@
  * Licensed under the MIT license.
  */
 
-var sinon = require('sinon'),
-    util = require('util');
+var sinon = require('sinon');
+var util = require('util');
 
 var BackoffStrategy = require('../lib/strategy/strategy');
 

@@ -5,8 +5,8 @@
 
 var sinon = require('sinon');
 
-var Backoff = require('../lib/backoff'),
-    BackoffStrategy = require('../lib/strategy/strategy');
+var Backoff = require('../lib/backoff');
+var BackoffStrategy = require('../lib/strategy/strategy');
 
 exports["Backoff"] = {
     setUp: function(callback) {

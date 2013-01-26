@@ -3,9 +3,9 @@
  * Licensed under the MIT license.
  */
 
-var events = require('events'),
-    sinon = require('sinon'),
-    util = require('util');
+var events = require('events');
+var sinon = require('sinon');
+var util = require('util');
 
 var FunctionCall = require('../lib/function_call');
 
