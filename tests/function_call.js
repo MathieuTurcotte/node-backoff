@@ -106,19 +106,22 @@ exports["FunctionCall"] = {
 
     "call should complete when the wrapped function succeeds": function(test) {
         var call = new FunctionCall(this.wrappedFn, [1, 2, 3], this.callback);
-        this.wrappedFn.yields(new Error());
+        this.wrappedFn.yields(new Error())
+            .yields(new Error())
+            .yields(new Error())
+            .yields(null, 'Success!');
+
         call.start(this.backoffFactory);
 
-        for (var i = 0; i < 3; i++) {
+        for (var i = 0; i < 2; i++) {
             this.backoff.emit('ready');
         }
 
         test.equals(this.callback.callCount, 0);
-
-        this.wrappedFn.yields(null, 'Success!');
         this.backoff.emit('ready');
 
         test.ok(this.callback.calledWith(null, 'Success!'));
+        test.ok(this.wrappedFn.alwaysCalledWith(1, 2, 3));
         test.done();
     },
 
@@ -137,6 +140,7 @@ exports["FunctionCall"] = {
         this.backoff.emit('fail');
 
         test.ok(this.callback.calledWith(error));
+        test.ok(this.wrappedFn.alwaysCalledWith(1, 2, 3));
         test.done();
     },
 
