@@ -24,10 +24,14 @@ exports["API"] = {
         test.done();
     },
 
-    "backoff.call should be defined and a function": function(test) {
+    "backoff.call should be a function that returns a FunctionCall instance": function(test) {
+        var fn = function() {};
+        var callback = function() {};
         test.ok(backoff.Backoff, 'backoff.call should be defined.');
         test.equal(typeof backoff.call, 'function',
-            'backoff.Backoff should be a function.');
+            'backoff.call should be a function.');
+        test.equal(backoff.call(fn, 1, 2, 3, callback).constructor.name,
+            'FunctionCall');
         test.done();
     },
 
