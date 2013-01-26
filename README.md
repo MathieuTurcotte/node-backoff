@@ -279,9 +279,10 @@ var results = call.getResults();
 var error = results[1][0];
 ```
 
-#### call.call()
+#### call.start()
 
-Calls the wrapped function. This method should only be called once.
+Initiates the call the wrapped function. This method should only be called
+once per function call instance.
 
 #### call.abort()
 

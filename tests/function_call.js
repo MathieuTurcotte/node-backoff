@@ -50,7 +50,7 @@ exports["FunctionCall"] = {
         var replacementStrategy = {};
         var call = new FunctionCall(this.wrappedFn, [], this.callback);
         call.setStrategy(replacementStrategy);
-        call.call(this.backoffFactory);
+        call.start(this.backoffFactory);
         test.ok(this.backoffFactory.calledWith(replacementStrategy),
             'User defined strategy should be used to instantiate ' +
             'the backoff instance.');
@@ -59,7 +59,7 @@ exports["FunctionCall"] = {
 
     "setStrategy should throw if the call is in progress": function(test) {
         var call = new FunctionCall(this.wrappedFn, [], this.callback);
-        call.call(this.backoffFactory);
+        call.start(this.backoffFactory);
         test.throws(function() {
             call.setStrategy({});
         }, /in progress/);
@@ -70,7 +70,7 @@ exports["FunctionCall"] = {
         var failAfterValue = 99;
         var call = new FunctionCall(this.wrappedFn, [], this.callback);
         call.failAfter(failAfterValue);
-        call.call(this.backoffFactory);
+        call.start(this.backoffFactory);
         test.ok(this.backoff.failAfter.calledWith(failAfterValue),
             'User defined maximum number of backoffs shoud be ' +
             'used to configure the backoff instance.');
@@ -79,35 +79,35 @@ exports["FunctionCall"] = {
 
     "failAfter should throw if the call is in progress": function(test) {
         var call = new FunctionCall(this.wrappedFn, [], this.callback);
-        call.call(this.backoffFactory);
+        call.start(this.backoffFactory);
         test.throws(function() {
             call.failAfter(1234);
         }, /in progress/);
         test.done();
     },
 
-    "call shouldn't allow overlapping invocation": function(test) {
+    "start shouldn't allow overlapping invocation": function(test) {
         var call = new FunctionCall(this.wrappedFn, [], this.callback);
         var backoffFactory = this.backoffFactory;
 
-        call.call(backoffFactory);
+        call.start(backoffFactory);
         test.throws(function() {
-            call.call(backoffFactory);
+            call.start(backoffFactory);
         }, /in progress/);
         test.done();
     },
 
     "call should forward its arguments to the wrapped function": function(test) {
         var call = new FunctionCall(this.wrappedFn, [1, 2, 3], this.callback);
-        call.call(this.backoffFactory);
+        call.start(this.backoffFactory);
         test.ok(this.wrappedFn.calledWith(1, 2, 3));
         test.done();
     },
 
-    "call should complete when the wrapped function succeed": function(test) {
+    "call should complete when the wrapped function succeeds": function(test) {
         var call = new FunctionCall(this.wrappedFn, [1, 2, 3], this.callback);
         this.wrappedFn.yields(new Error());
-        call.call(this.backoffFactory);
+        call.start(this.backoffFactory);
 
         for (var i = 0; i < 3; i++) {
             this.backoff.emit('ready');
@@ -126,7 +126,7 @@ exports["FunctionCall"] = {
         var call = new FunctionCall(this.wrappedFn, [1, 2, 3], this.callback);
         var error = new Error();
         this.wrappedFn.yields(error);
-        call.call(this.backoffFactory);
+        call.start(this.backoffFactory);
 
         for (var i = 0; i < 3; i++) {
             this.backoff.emit('ready');
@@ -143,7 +143,7 @@ exports["FunctionCall"] = {
     "wrapped function shouldn't be called after abort": function(test) {
         var call = new FunctionCall(this.wrappedFn, [], this.callback);
         call.abort();
-        call.call(this.backoffFactory);
+        call.start(this.backoffFactory);
         test.equals(this.wrappedFn.callCount, 0,
             'Wrapped function shouldn\'t be called after abort.');
         test.done();
@@ -155,7 +155,7 @@ exports["FunctionCall"] = {
             callback(null, 'ok');
         }, [], this.callback);
 
-        call.call(this.backoffFactory);
+        call.start(this.backoffFactory);
 
         test.equals(this.callback.callCount, 0,
             'Wrapped function\'s callback shouldn\'t be called after abort.');
@@ -165,7 +165,7 @@ exports["FunctionCall"] = {
     "getResults should return intermediary results": function(test) {
         var call = new FunctionCall(this.wrappedFn, [], this.callback);
         this.wrappedFn.yields(1);
-        call.call(this.backoffFactory);
+        call.start(this.backoffFactory);
 
         for (var i = 2; i < 5; i++) {
             this.wrappedFn.yields(i);
@@ -183,7 +183,7 @@ exports["FunctionCall"] = {
         var call = new FunctionCall(this.wrappedFn, [1, 2, 3], this.callback);
         this.wrappedFn.throws(new Error());
         test.throws(function() {
-            call.call(this.backoffFactory);
+            call.start(this.backoffFactory);
         }, Error);
         test.done();
     },
@@ -193,7 +193,7 @@ exports["FunctionCall"] = {
         this.wrappedFn.yields(null, 'Success!');
         this.callback.throws(new Error());
         test.throws(function() {
-            call.call(this.backoffFactory);
+            call.start(this.backoffFactory);
         }, Error);
         test.done();
     },
@@ -204,7 +204,7 @@ exports["FunctionCall"] = {
 
         var call = new FunctionCall(this.wrappedFn, [1, 'two'], this.callback);
         call.on('call', callEventSpy);
-        call.call(this.backoffFactory);
+        call.start(this.backoffFactory);
 
         for (var i = 1; i < 5; i++) {
             this.backoff.emit('ready');
@@ -223,7 +223,7 @@ exports["FunctionCall"] = {
         call.on('callback', callbackSpy);
 
         this.wrappedFn.yields('error');
-        call.call(this.backoffFactory);
+        call.start(this.backoffFactory);
 
         this.wrappedFn.yields(null, 'done');
         this.backoff.emit('ready');
@@ -243,7 +243,7 @@ exports["FunctionCall"] = {
         call.on('backoff', backoffSpy);
 
         this.wrappedFn.yields(new Error());
-        call.call(this.backoffFactory);
+        call.start(this.backoffFactory);
         this.backoff.emit('backoff', 3, 1234);
 
         test.equal(1, backoffSpy.callCount,

@@ -46,7 +46,7 @@ module.exports.call = function(fn, vargs, callback) {
                                 args[args.length - 1]);
 
     process.nextTick(function() {
-        call.call();
+        call.start();
     });
 
     return call;
