@@ -34,20 +34,16 @@ module.exports.exponential = function(options) {
 };
 
 /**
- * Calls a function in a backoff loop.
- * @param fn Function to wrap in a backoff handler.
- * @param vargs Function's arguments (var args).
- * @param callback Function's callback.
- * @return The call handle.
+ * Constructs a FunctionCall for the given function and arguments.
+ * @param fn The function to wrap in a backoff handler.
+ * @param vargs The function's arguments (var args).
+ * @param callback The function's callback.
+ * @return The FunctionCall instance.
  */
 module.exports.call = function(fn, vargs, callback) {
     var args = Array.prototype.slice.call(arguments);
-    var call = new FunctionCall(args[0], args.slice(1, args.length - 1),
-                                args[args.length - 1]);
-
-    process.nextTick(function() {
-        call.start();
-    });
-
-    return call;
+    fn = args[0];
+    vargs = args.slice(1, args.length - 1);
+    callback = args[args.length - 1];
+    return new FunctionCall(fn, vargs, callback);
 };

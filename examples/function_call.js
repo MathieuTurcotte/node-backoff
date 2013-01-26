@@ -53,3 +53,4 @@ call.on('backoff', function(number, delay) {
 
 call.setStrategy(new backoff.ExponentialStrategy());
 call.failAfter(2);
+call.start();

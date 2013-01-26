@@ -99,6 +99,7 @@ var call = backoff.call(get, 'https://duplika.ca/', function(err, res) {
 
 call.setStrategy(new backoff.ExponentialStrategy());
 call.failAfter(10);
+call.start();
 ```
 
 ## API
@@ -125,17 +126,17 @@ and 1. By default, no randomisation is applied on the backoff delay.
 
 ### backoff.call(fn, [args, ...], callback)
 
-- fn: function to call in a backoff handler
+- fn: function to call in a backoff handler, i.e. the wrapped function
 - args: function's arguments
 - callback: function's callback accepting an error as its first argument
 
-Calls an asynchronous function in a backoff handler so that it gets
-automatically retried on error. The wrapped function will get retried until it
-succeds or reaches the maximum number of backoffs. In both cases, the callback
-function will be invoked with the last result returned by the wrapped function.
+Constructs a `FunctionCall` instance for the given function. The wrapped
+function will get retried until it succeds or reaches the maximum number
+of backoffs. In both cases, the callback function will be invoked with the
+last result returned by the wrapped function.
 
-This function returns a `FunctionCall` instance that is going to be invoked on
-next tick and can be used to configure and/or abort the call.
+It is the caller's responsability to initiate the call by invoking the
+`start` method on the returned `FunctionCall` instance.
 
 ### Class Backoff
 
