@@ -198,6 +198,8 @@ be emitted if the client has set a limit on the number of backoffs by calling
 `backoff.failAfter(numberOfBackoffs)`. The backoff instance is automatically
 reset after this event is emitted.
 
+![Backoff Events](raw.github.com/MathieuTurcotte/node-backoff/master/doc/backoff_events.png)
+
 ### Interface BackoffStrategy
 
 A backoff strategy must provide the following methods.
