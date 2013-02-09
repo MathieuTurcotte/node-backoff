@@ -198,11 +198,6 @@ be emitted if the client has set a limit on the number of backoffs by calling
 `backoff.failAfter(numberOfBackoffs)`. The backoff instance is automatically
 reset after this event is emitted.
 
-<p align="center">
-  <img src="//raw.github.com/MathieuTurcotte/node-backoff/master/doc/backoff_events.png"
-       alt="Backoff events"/>
-</p>
-
 ### Interface BackoffStrategy
 
 A backoff strategy must provide the following methods.
@@ -316,11 +311,6 @@ Emitted each time the wrapped function invokes its callback.
 - delay: backoff delay in milliseconds
 
 Emitted each time a backoff operation is started.
-
-<p align="center">
-  <img src="//raw.github.com/MathieuTurcotte/node-backoff/master/doc/function_call_events.png"
-       alt="FunctionCallevents"/>
-</p>
 
 ## License
 
