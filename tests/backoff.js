@@ -69,6 +69,8 @@ exports["Backoff"] = {
     },
 
     "the fail event should be emitted when backoff limit is reached": function(test) {
+        var err = new Error('Fail');
+
         this.backoffStrategy.next.returns(10);
         this.backoff.on('fail', this.spy);
 
@@ -82,8 +84,9 @@ exports["Backoff"] = {
 
         // Failure should occur on the third call, and not before.
         test.ok(!this.spy.calledOnce, 'Fail event shouldn\'t have been emitted.');
-        this.backoff.backoff();
+        this.backoff.backoff(err);
         test.ok(this.spy.calledOnce, 'Fail event should have been emitted.');
+        test.equal(this.spy.getCall(0).args[0], err, 'Error should be passed');
 
         test.done();
     },
