@@ -156,7 +156,7 @@ Sets a limit on the maximum number of backoffs that can be performed before
 a fail event gets emitted and the backoff instance is reset. By default, there
 is no limit on the number of backoffs that can be performed.
 
-#### backoff.backoff()
+#### backoff.backoff([err])
 
 Starts a backoff operation. Will throw an error if a backoff operation is
 already in progress.
@@ -164,6 +164,10 @@ already in progress.
 In practice, this method should be called after a failed attempt to perform a
 sensitive operation (connecting to a database, downloading a resource over the
 network, etc.).
+
+If provided, the error parameter will be emitted as the last argument of the
+`backoff` and `fail` events to let the client know why the backoff operation
+was attempted.
 
 #### backoff.reset()
 
@@ -179,6 +183,7 @@ request to stop any reconnection attempt.
 
 - number: number of backoffs since last reset, starting at 0
 - delay: backoff delay in milliseconds
+- err: `err` parameter which was passed to `backoff()` call, if present
 
 Emitted when a backoff operation is started. Signals to the client how long
 the next backoff delay will be.
@@ -192,6 +197,8 @@ Emitted when a backoff operation is done. Signals that the failing operation
 should be retried.
 
 #### Event: 'fail'
+
+- err: `err` parameter which was passed to `backoff()` call, if present
 
 Emitted when the maximum number of backoffs is reached. This event will only
 be emitted if the client has set a limit on the number of backoffs by calling

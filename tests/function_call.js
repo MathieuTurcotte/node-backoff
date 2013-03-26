@@ -3,6 +3,7 @@
  * Licensed under the MIT license.
  */
 
+var assert = require('assert');
 var events = require('events');
 var sinon = require('sinon');
 var util = require('util');
@@ -255,5 +256,23 @@ exports["FunctionCall"] = {
         test.deepEqual([3, 1234], backoffSpy.firstCall.args,
             'Backoff event should carry current backoff number and delay.');
         test.done();
+    },
+
+    "when error is provided by the function it should be passed to the callback": function (test) {
+        var err = new Error();
+        var call = new FunctionCall(function (callback) {
+          callback(err);
+        }, [], function (err_) {
+          assert.equal(err_, err);
+          test.done();
+        });
+
+        call.failAfter(1);
+
+        call.on('backoff', function (number, delay, err_) {
+          assert.equal(err_, err);
+        });
+
+        call.start();
     }
 };
