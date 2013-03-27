@@ -158,16 +158,15 @@ is no limit on the number of backoffs that can be performed.
 
 #### backoff.backoff([err])
 
-Starts a backoff operation. Will throw an error if a backoff operation is
-already in progress.
+Starts a backoff operation. If provided, the error parameter will be emitted
+as the last argument of the `backoff` and `fail` events to let the listeners
+know why the backoff operation was attempted.
+
+An error will be thrown an error if a backoff operation is already in progress.
 
 In practice, this method should be called after a failed attempt to perform a
 sensitive operation (connecting to a database, downloading a resource over the
 network, etc.).
-
-If provided, the error parameter will be emitted as the last argument of the
-`backoff` and `fail` events to let the client know why the backoff operation
-was attempted.
 
 #### backoff.reset()
 
@@ -183,7 +182,7 @@ request to stop any reconnection attempt.
 
 - number: number of backoffs since last reset, starting at 0
 - delay: backoff delay in milliseconds
-- err: `err` parameter which was passed to `backoff()` call, if present
+- err: optional error parameter passed to `backoff.backoff([err])`
 
 Emitted when a backoff operation is started. Signals to the client how long
 the next backoff delay will be.
@@ -198,7 +197,7 @@ should be retried.
 
 #### Event: 'fail'
 
-- err: `err` parameter which was passed to `backoff()` call, if present
+- err: optional error parameter passed to `backoff.backoff([err])`
 
 Emitted when the maximum number of backoffs is reached. This event will only
 be emitted if the client has set a limit on the number of backoffs by calling
@@ -316,6 +315,7 @@ Emitted each time the wrapped function invokes its callback.
 
 - number: backoff number, starts at 0
 - delay: backoff delay in milliseconds
+- err: the error that triggered the backoff operation
 
 Emitted each time a backoff operation is started.
 

@@ -243,36 +243,22 @@ exports["FunctionCall"] = {
     },
 
     "backoff event should be emitted on backoff start": function(test) {
+        var err = new Error('backoff event error');
         var call = new FunctionCall(this.wrappedFn, [1, 'two'], this.callback);
         var backoffSpy = sinon.spy();
+
         call.on('backoff', backoffSpy);
 
-        this.wrappedFn.yields(new Error());
+        this.wrappedFn.yields(err);
         call.start(this.backoffFactory);
-        this.backoff.emit('backoff', 3, 1234);
+        this.backoff.emit('backoff', 3, 1234, err);
 
+        test.ok(this.backoff.backoff.calledWith(err),
+            'The backoff instance should have been called with the error.');
         test.equal(1, backoffSpy.callCount,
             'Backoff event should have been emitted 1 time.');
-        test.deepEqual([3, 1234], backoffSpy.firstCall.args,
-            'Backoff event should carry current backoff number and delay.');
+        test.deepEqual([3, 1234, err], backoffSpy.firstCall.args,
+            'Backoff event should carry the backoff number, delay and error.');
         test.done();
-    },
-
-    "when error is provided by the function it should be passed to the callback": function (test) {
-        var err = new Error();
-        var call = new FunctionCall(function (callback) {
-          callback(err);
-        }, [], function (err_) {
-          assert.equal(err_, err);
-          test.done();
-        });
-
-        call.failAfter(1);
-
-        call.on('backoff', function (number, delay, err_) {
-          assert.equal(err_, err);
-        });
-
-        call.start();
     }
 };
