@@ -11,10 +11,10 @@
     "devDependencies": {
         "sinon": "1.5.2",
         "nodeunit": "0.7",
-        "jshint": "0.9.0"
+        "jshint": "1.1.0"
     },
     "scripts": {
-        "pretest": "node_modules/jshint/bin/hint lib/ lib/ tests/ examples/ index.js",
+        "pretest": "node_modules/jshint/bin/jshint lib/ lib/ tests/ examples/ index.js",
         "test": "node_modules/nodeunit/bin/nodeunit tests/"
     },
     "engines": {
