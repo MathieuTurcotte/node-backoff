@@ -12,8 +12,10 @@
 
 ## 2.0.0
 
-- `FunctionCall.call` renamed `Function.start`.
-- `backoff.call` no longer invokes the wrapped function on `nextTick`.
+- `FunctionCall.call` renamed into `FunctionCall.start`.
+- `backoff.call` no longer invokes the wrapped function on `nextTick`. That
+  way, the first attempt is not delayed until the end of the current event
+  loop.
 
 ## 1.2.1
 
