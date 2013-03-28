@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.1.0
+
+- `Backoff.backoff` now accepts an optional error argument that is re-emitted
+  as the last argument of the `backoff` and `fail` events. This provides some
+  context to the listeners as to why a given backoff operation was attempted.
+- The `backoff` event emitted by the `FunctionCall` class now contains, as its
+  last argument, the error that caused the backoff operation to be attempted.
+  This provides some context to the listeners as to why a given backoff
+  operation was attempted.
+
 ## 2.0.0
 
 - `FunctionCall.call` renamed `Function.start`.
