@@ -268,8 +268,10 @@ Sets the backoff strategy to use. This method should be called before
 
 - maxNumberOfBackoffs: maximum number of backoffs before the call is aborted
 
-Sets the maximum number of backoffs before the call is aborted. This method
-should be called before `call.call()`.
+Sets the maximum number of backoffs before the call is aborted. By default,
+there is no limit on the number of backoffs that can be performed.
+
+This method should be called before `call.call()`.
 
 #### call.getResults()
 

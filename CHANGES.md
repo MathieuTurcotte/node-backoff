@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.2.0 (not released)
+
+- To match `Backoff` default behavior, `FunctionCall` no longer sets a
+  default failAfter of 5, i.e. the maximum number of backoffs is now
+  unbounded by default.
+
 ## 2.1.0
 
 - `Backoff.backoff` now accepts an optional error argument that is re-emitted
