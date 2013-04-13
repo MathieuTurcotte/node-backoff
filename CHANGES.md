@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.2.0 (not released)
+## 2.2.0
 
 - To match `Backoff` default behavior, `FunctionCall` no longer sets a
   default failAfter of 5, i.e. the maximum number of backoffs is now
