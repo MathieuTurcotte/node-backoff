@@ -94,7 +94,18 @@ exports["FunctionCall"] = {
         call.start(backoffFactory);
         test.throws(function() {
             call.start(backoffFactory);
-        }, /in progress/);
+        }, /already started/);
+        test.done();
+    },
+
+    "start shouldn't allow invocation of aborted call": function(test) {
+        var call = new FunctionCall(this.wrappedFn, [], this.callback);
+        var backoffFactory = this.backoffFactory;
+
+        call.abort();
+        test.throws(function() {
+            call.start(backoffFactory);
+        }, /aborted/);
         test.done();
     },
 
@@ -142,15 +153,6 @@ exports["FunctionCall"] = {
 
         test.ok(this.callback.calledWith(error));
         test.ok(this.wrappedFn.alwaysCalledWith(1, 2, 3));
-        test.done();
-    },
-
-    "wrapped function shouldn't be called after abort": function(test) {
-        var call = new FunctionCall(this.wrappedFn, [], this.callback);
-        call.abort();
-        call.start(this.backoffFactory);
-        test.equals(this.wrappedFn.callCount, 0,
-            'Wrapped function shouldn\'t be called after abort.');
         test.done();
     },
 

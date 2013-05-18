@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.2.0 (not released)
+
+- Add four new functions on `FunctionCall` to query the state of the call.
+  - isPending
+  - isRunning
+  - isCompleted
+  - isAborted
+
 ## 2.1.0
 
 - `Backoff.backoff` now accepts an optional error argument that is re-emitted

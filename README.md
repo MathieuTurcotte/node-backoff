@@ -257,6 +257,22 @@ way to create `FunctionCall` instances.
 
 Constructs a function handler for the given asynchronous function.
 
+#### call.isPending()
+
+Returns whether the call is pending, i.e. hasn't been started.
+
+#### call.isRunning()
+
+Returns whether the call is in progress.
+
+#### call.isCompleted()
+
+Returns whether the call is completed.
+
+#### call.isAborted()
+
+Returns whether the call is aborted.
+
 #### call.setStrategy(strategy)
 
 - strategy: strategy instance to use, defaults to `FibonacciStrategy`.
