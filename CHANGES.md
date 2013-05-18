@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.3.0 (not released)
+## 2.3.0
 
 - Add four new methods to `FunctionCall` to query the state of the call.
   - isPending
