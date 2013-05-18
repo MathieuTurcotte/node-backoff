@@ -47,6 +47,62 @@ exports["FunctionCall"] = {
         test.done();
     },
 
+    "isPending should return false once the call is started": function(test) {
+        this.wrappedFn.yields(new Error()).yields(null, 'Success!');
+        var call = new FunctionCall(this.wrappedFn, [], this.callback);
+
+        test.ok(call.isPending());
+
+        call.start(this.backoffFactory);
+        test.ok(!call.isPending());
+
+        this.backoff.emit('ready');
+        test.ok(!call.isPending());
+
+        test.done();
+    },
+
+    "isRunning should return true when call is in progress": function(test) {
+        this.wrappedFn.yields(new Error()).yields(null, 'Success!');
+        var call = new FunctionCall(this.wrappedFn, [], this.callback);
+
+        test.ok(!call.isRunning());
+
+        call.start(this.backoffFactory);
+        test.ok(call.isRunning());
+
+        this.backoff.emit('ready');
+        test.ok(!call.isRunning());
+
+        test.done();
+    },
+
+    "isCompleted should return true once the call completes": function(test) {
+        this.wrappedFn.yields(new Error()).yields(null, 'Success!');
+        var call = new FunctionCall(this.wrappedFn, [], this.callback);
+
+        test.ok(!call.isCompleted());
+
+        call.start(this.backoffFactory);
+        test.ok(!call.isCompleted());
+
+        this.backoff.emit('ready');
+        test.ok(call.isCompleted());
+
+        test.done();
+    },
+
+    "isAborted should return true once the call is aborted": function(test) {
+        this.wrappedFn.yields(new Error()).yields(null, 'Success!');
+        var call = new FunctionCall(this.wrappedFn, [], this.callback);
+
+        test.ok(!call.isAborted());
+        call.abort();
+        test.ok(call.isAborted());
+
+        test.done();
+    },
+
     "setStrategy should overwrite the default strategy": function(test) {
         var replacementStrategy = {};
         var call = new FunctionCall(this.wrappedFn, [], this.callback);
