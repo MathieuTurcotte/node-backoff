@@ -67,7 +67,14 @@ exports["FunctionCall"] = {
         test.done();
     },
 
-    "failAfter should overwrite the maximum number of backoffs": function(test) {
+    "failAfter should not be set by default": function(test) {
+		var call = new FunctionCall(this.wrappedFn, [], this.callback);
+        call.start(this.backoffFactory);
+        test.equal(0, this.backoff.failAfter.callCount);
+		test.done();
+	},
+
+    "failAfter should be used as the maximum number of backoffs": function(test) {
         var failAfterValue = 99;
         var call = new FunctionCall(this.wrappedFn, [], this.callback);
         call.failAfter(failAfterValue);

@@ -1,7 +1,8 @@
 {
     "name": "backoff",
     "description": "Fibonacci and exponential backoffs.",
-    "version": "2.1.0",
+    "version": "2.2.0",
+    "license": "MIT",
     "author": "Mathieu Turcotte <turcotte.mat@gmail.com>",
     "keywords": ["backoff", "retry", "fibonacci", "exponential"],
     "repository": {
@@ -14,7 +15,7 @@
         "jshint": "1.1.0"
     },
     "scripts": {
-        "pretest": "node_modules/jshint/bin/jshint lib/ lib/ tests/ examples/ index.js",
+        "pretest": "node_modules/jshint/bin/jshint lib/ tests/ examples/ index.js",
         "test": "node_modules/nodeunit/bin/nodeunit tests/"
     },
     "engines": {
