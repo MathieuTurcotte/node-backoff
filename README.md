@@ -278,7 +278,7 @@ Returns whether the call is aborted.
 - strategy: strategy instance to use, defaults to `FibonacciStrategy`.
 
 Sets the backoff strategy to use. This method should be called before
-`call.call()`.
+`call.start()` otherwise an exception will be thrown.
 
 #### call.failAfter(maxNumberOfBackoffs)
 
@@ -287,7 +287,8 @@ Sets the backoff strategy to use. This method should be called before
 Sets the maximum number of backoffs before the call is aborted. By default,
 there is no limit on the number of backoffs that can be performed.
 
-This method should be called before `call.call()`.
+This method should be called before `call.start()` otherwise an exception will
+be thrown..
 
 #### call.getResults()
 
@@ -307,7 +308,8 @@ var error = results[1][0];
 #### call.start()
 
 Initiates the call the wrapped function. This method should only be called
-once per function call instance.
+once otherwise an exception will be thrown.
+
 
 #### call.abort()
 
