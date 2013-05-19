@@ -4,7 +4,7 @@
 
 Fibonacci and exponential backoffs for Node.js.
 
-The annotated source codecan be found at [mathieuturcotte.github.io/node-backoff/docs](http://mathieuturcotte.github.io/node-backoff/docs/).
+The annotated source code can be found at [mathieuturcotte.github.io/node-backoff/docs](http://mathieuturcotte.github.io/node-backoff/docs/).
 
 ## Installation
 
