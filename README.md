@@ -2,7 +2,8 @@
 [![Build Status](https://secure.travis-ci.org/MathieuTurcotte/node-backoff.png?branch=master)](http://travis-ci.org/MathieuTurcotte/node-backoff)
 [![NPM version](https://badge.fury.io/js/backoff.png)](http://badge.fury.io/js/backoff)
 
-Fibonacci and exponential backoffs for Node.js.
+Fibonacci and exponential backoffs for Node.js. The annotated source code
+can be found at [mathieuturcotte.github.io/node-backoff/docs/](http://mathieuturcotte.github.io/node-backoff/docs/).
 
 ## Installation
 
