@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>strategy.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="index.html">
+                index.js
+              </a>
+            
+              
+              <a class="source" href="backoff.html">
+                backoff.js
+              </a>
+            
+              
+              <a class="source" href="function_call.html">
+                function_call.js
+              </a>
+            
+              
+              <a class="source" href="exponential.html">
+                exponential.js
+              </a>
+            
+              
+              <a class="source" href="fibonacci.html">
+                fibonacci.js
+              </a>
+            
+              
+              <a class="source" href="strategy.html">
+                strategy.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>strategy.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <pre><code> Copyright (c) 2012 Mathieu Turcotte
+ Licensed under the MIT license.</code></pre>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> events = require(<span class="string">'events'</span>);
+<span class="keyword">var</span> util = require(<span class="string">'util'</span>);
+
+<span class="function"><span class="keyword">function</span> <span class="title">isDef</span><span class="params">(value)</span> {</span>
+    <span class="keyword">return</span> value !== <span class="literal">undefined</span> &amp;&amp; value !== <span class="literal">null</span>;
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Abstract class defining the skeleton for the backoff strategies. Accepts an
+object holding the options for the backoff strategy:</p>
+<ul>
+<li><code>randomisationFactor</code>: The randomisation factor which must be between 0
+ and 1 where 1 equates to a randomization factor of 100% and 0 to no
+ randomization.</li>
+<li><code>initialDelay</code>: The backoff initial delay in milliseconds.</li>
+<li><code>maxDelay</code>: The backoff maximal delay in milliseconds.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="keyword">function</span> <span class="title">BackoffStrategy</span><span class="params">(options)</span> {</span>
+    options = options || {};
+
+    <span class="keyword">if</span> (isDef(options.initialDelay) &amp;&amp; options.initialDelay &lt; <span class="number">1</span>) {
+        <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">'The initial timeout must be greater than 0.'</span>);
+    } <span class="keyword">else</span> <span class="keyword">if</span> (isDef(options.maxDelay) &amp;&amp; options.maxDelay &lt; <span class="number">1</span>) {
+        <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">'The maximal timeout must be greater than 0.'</span>);
+    }
+
+    <span class="keyword">this</span>.initialDelay_ = options.initialDelay || <span class="number">100</span>;
+    <span class="keyword">this</span>.maxDelay_ = options.maxDelay || <span class="number">10000</span>;
+
+    <span class="keyword">if</span> (<span class="keyword">this</span>.maxDelay_ &lt;= <span class="keyword">this</span>.initialDelay_) {
+        <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">'The maximal backoff delay must be '</span> +
+                        <span class="string">'greater than the initial backoff delay.'</span>);
+    }
+
+    <span class="keyword">if</span> (isDef(options.randomisationFactor) &amp;&amp;
+        (options.randomisationFactor &lt; <span class="number">0</span> || options.randomisationFactor &gt; <span class="number">1</span>)) {
+        <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">'The randomisation factor must be between 0 and 1.'</span>);
+    }
+
+    <span class="keyword">this</span>.randomisationFactor_ = options.randomisationFactor || <span class="number">0</span>;
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Gets the maximal backoff delay.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>BackoffStrategy.prototype.getMaxDelay = <span class="keyword">function</span>() {
+    <span class="keyword">return</span> <span class="keyword">this</span>.maxDelay_;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Gets the initial backoff delay.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>BackoffStrategy.prototype.getInitialDelay = <span class="keyword">function</span>() {
+    <span class="keyword">return</span> <span class="keyword">this</span>.initialDelay_;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Template method that computes and returns the next backoff delay in
+milliseconds.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>BackoffStrategy.prototype.next = <span class="keyword">function</span>() {
+    <span class="keyword">var</span> backoffDelay = <span class="keyword">this</span>.next_();
+    <span class="keyword">var</span> randomisationMultiple = <span class="number">1</span> + Math.random() * <span class="keyword">this</span>.randomisationFactor_;
+    <span class="keyword">var</span> randomizedDelay = Math.round(backoffDelay * randomisationMultiple);
+    <span class="keyword">return</span> randomizedDelay;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Computes and returns the next backoff delay. Intended to be overridden by
+subclasses.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>BackoffStrategy.prototype.next_ = <span class="keyword">function</span>() {
+    <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">'BackoffStrategy.next_() unimplemented.'</span>);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Template method that resets the backoff delay to its initial value.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>BackoffStrategy.prototype.reset = <span class="keyword">function</span>() {
+    <span class="keyword">this</span>.reset_();
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Resets the backoff delay to its initial value. Intended to be overridden by
+subclasses.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>BackoffStrategy.prototype.reset_ = <span class="keyword">function</span>() {
+    <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">'BackoffStrategy.reset_() unimplemented.'</span>);
+};
+
+module.exports = BackoffStrategy;</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

@@ -12,9 +12,11 @@
     "devDependencies": {
         "sinon": "1.7",
         "nodeunit": "0.8",
-        "jshint": "2.0"
+        "jshint": "2.0",
+        "docco": "0.6"
     },
     "scripts": {
+        "docco" : "node_modules/.bin/docco lib/*.js lib/strategy/* index.js",
         "pretest": "node_modules/jshint/bin/jshint lib/ tests/ examples/ index.js",
         "test": "node_modules/nodeunit/bin/nodeunit tests/"
     },

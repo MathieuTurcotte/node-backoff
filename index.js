@@ -1,7 +1,5 @@
-/*
- * Copyright (c) 2012 Mathieu Turcotte
- * Licensed under the MIT license.
- */
+//      Copyright (c) 2012 Mathieu Turcotte
+//      Licensed under the MIT license.
 
 var Backoff = require('./lib/backoff');
 var ExponentialBackoffStrategy = require('./lib/strategy/exponential');
@@ -13,33 +11,17 @@ module.exports.FunctionCall = FunctionCall;
 module.exports.FibonacciStrategy = FibonacciBackoffStrategy;
 module.exports.ExponentialStrategy = ExponentialBackoffStrategy;
 
-/**
- * Constructs a Fibonacci backoff.
- * @param options Fibonacci backoff strategy arguments.
- * @return The fibonacci backoff.
- * @see FibonacciBackoffStrategy
- */
+// Constructs a Fibonacci backoff.
 module.exports.fibonacci = function(options) {
     return new Backoff(new FibonacciBackoffStrategy(options));
 };
 
-/**
- * Constructs an exponential backoff.
- * @param options Exponential strategy arguments.
- * @return The exponential backoff.
- * @see ExponentialBackoffStrategy
- */
+// Constructs an exponential backoff.
 module.exports.exponential = function(options) {
     return new Backoff(new ExponentialBackoffStrategy(options));
 };
 
-/**
- * Constructs a FunctionCall for the given function and arguments.
- * @param fn The function to wrap in a backoff handler.
- * @param vargs The function's arguments (var args).
- * @param callback The function's callback.
- * @return The FunctionCall instance.
- */
+// Constructs a FunctionCall for the given function and arguments.
 module.exports.call = function(fn, vargs, callback) {
     var args = Array.prototype.slice.call(arguments);
     fn = args[0];

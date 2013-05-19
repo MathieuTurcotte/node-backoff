@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>backoff.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="index.html">
+                index.js
+              </a>
+            
+              
+              <a class="source" href="backoff.html">
+                backoff.js
+              </a>
+            
+              
+              <a class="source" href="function_call.html">
+                function_call.js
+              </a>
+            
+              
+              <a class="source" href="exponential.html">
+                exponential.js
+              </a>
+            
+              
+              <a class="source" href="fibonacci.html">
+                fibonacci.js
+              </a>
+            
+              
+              <a class="source" href="strategy.html">
+                strategy.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>backoff.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <pre><code> Copyright (c) 2012 Mathieu Turcotte
+ Licensed under the MIT license.</code></pre>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> events = require(<span class="string">'events'</span>);
+<span class="keyword">var</span> util = require(<span class="string">'util'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>A class to hold the state of a backoff operation. Accepts a backoff strategy
+to generate the backoff delays.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="keyword">function</span> <span class="title">Backoff</span><span class="params">(backoffStrategy)</span> {</span>
+    events.EventEmitter.call(<span class="keyword">this</span>);
+
+    <span class="keyword">this</span>.backoffStrategy_ = backoffStrategy;
+    <span class="keyword">this</span>.maxNumberOfRetry_ = -<span class="number">1</span>;
+    <span class="keyword">this</span>.backoffNumber_ = <span class="number">0</span>;
+    <span class="keyword">this</span>.backoffDelay_ = <span class="number">0</span>;
+    <span class="keyword">this</span>.timeoutID_ = -<span class="number">1</span>;
+
+    <span class="keyword">this</span>.handlers = {
+        backoff: <span class="keyword">this</span>.onBackoff_.bind(<span class="keyword">this</span>)
+    };
+}
+util.inherits(Backoff, events.EventEmitter);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Sets a limit, greater than 0, on the maximum number of backoffs. A &#39;fail&#39;
+event will be emitted when the limit is reached.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>Backoff.prototype.failAfter = <span class="keyword">function</span>(maxNumberOfRetry) {
+    <span class="keyword">if</span> (maxNumberOfRetry &lt; <span class="number">1</span>) {
+        <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">'Maximum number of retry must be greater than 0. '</span> +
+                        <span class="string">'Actual: '</span> + maxNumberOfRetry);
+    }
+
+    <span class="keyword">this</span>.maxNumberOfRetry_ = maxNumberOfRetry;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Starts a backoff operation. Accepts an optional parameter to let the
+listeners know why the backoff operation was started.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>Backoff.prototype.backoff = <span class="keyword">function</span>(err) {
+    <span class="keyword">if</span> (<span class="keyword">this</span>.timeoutID_ !== -<span class="number">1</span>) {
+        <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">'Backoff in progress.'</span>);
+    }
+
+    <span class="keyword">if</span> (<span class="keyword">this</span>.backoffNumber_ === <span class="keyword">this</span>.maxNumberOfRetry_) {
+        <span class="keyword">this</span>.emit(<span class="string">'fail'</span>, err);
+        <span class="keyword">this</span>.reset();
+    } <span class="keyword">else</span> {
+        <span class="keyword">this</span>.backoffDelay_ = <span class="keyword">this</span>.backoffStrategy_.next();
+        <span class="keyword">this</span>.timeoutID_ = setTimeout(<span class="keyword">this</span>.handlers.backoff, <span class="keyword">this</span>.backoffDelay_);
+        <span class="keyword">this</span>.emit(<span class="string">'backoff'</span>, <span class="keyword">this</span>.backoffNumber_, <span class="keyword">this</span>.backoffDelay_, err);
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Handles the backoff timeout completion.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>Backoff.prototype.onBackoff_ = <span class="keyword">function</span>() {
+    <span class="keyword">this</span>.timeoutID_ = -<span class="number">1</span>;
+    <span class="keyword">this</span>.emit(<span class="string">'ready'</span>, <span class="keyword">this</span>.backoffNumber_, <span class="keyword">this</span>.backoffDelay_);
+    <span class="keyword">this</span>.backoffNumber_++;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Stops any backoff operation and resets the backoff delay to its inital value.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>Backoff.prototype.reset = <span class="keyword">function</span>() {
+    <span class="keyword">this</span>.backoffNumber_ = <span class="number">0</span>;
+    <span class="keyword">this</span>.backoffStrategy_.reset();
+    clearTimeout(<span class="keyword">this</span>.timeoutID_);
+    <span class="keyword">this</span>.timeoutID_ = -<span class="number">1</span>;
+};
+
+module.exports = Backoff;</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
