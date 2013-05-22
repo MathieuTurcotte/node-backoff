@@ -4,8 +4,6 @@
 
 Fibonacci and exponential backoffs for Node.js.
 
-The annotated source code can be found at [mathieuturcotte.github.io/node-backoff/docs](http://mathieuturcotte.github.io/node-backoff/docs/).
-
 ## Installation
 
 ```
@@ -342,6 +340,10 @@ Emitted each time the wrapped function invokes its callback.
 - err: the error that triggered the backoff operation
 
 Emitted each time a backoff operation is started.
+
+## Annotated source code
+
+The annotated source code can be found at [mathieuturcotte.github.io/node-backoff/docs](http://mathieuturcotte.github.io/node-backoff/docs/).
 
 ## License
 
