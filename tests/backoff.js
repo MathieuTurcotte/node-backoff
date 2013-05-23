@@ -108,7 +108,7 @@ exports["Backoff"] = {
         var backoff = this.backoff;
         test.throws(function() {
             backoff.failAfter(0);
-        }, /must be greater than 0/);
+        }, /greater than 0 but got 0/);
         test.done();
     },
 

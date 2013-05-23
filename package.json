@@ -9,6 +9,9 @@
         "type": "git",
         "url": "https://github.com/MathieuTurcotte/node-backoff.git"
     },
+    "dependencies": {
+        "precond": "0.1"
+    },
     "devDependencies": {
         "sinon": "1.7",
         "nodeunit": "0.8",

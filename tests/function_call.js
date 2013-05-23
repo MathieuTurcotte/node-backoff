@@ -36,14 +36,14 @@ exports["FunctionCall"] = {
     "constructor's first argument should be a function": function(test) {
         test.throws(function() {
             new FunctionCall(1, [], function() {});
-        }, /should be a function/);
+        }, /Expected fn to be a function./);
         test.done();
     },
 
     "constructor's last argument should be a function": function(test) {
         test.throws(function() {
             new FunctionCall(function() {}, [], 3);
-        }, /should be a function/);
+        }, /Expected callback to be a function./);
         test.done();
     },
 
