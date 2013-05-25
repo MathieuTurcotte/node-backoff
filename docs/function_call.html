@@ -74,6 +74,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="keyword">var</span> events = require(<span class="string">'events'</span>);
+<span class="keyword">var</span> precond = require(<span class="string">'precond'</span>);
 <span class="keyword">var</span> util = require(<span class="string">'util'</span>);
 
 <span class="keyword">var</span> Backoff = require(<span class="string">'./backoff'</span>);
@@ -88,23 +89,6 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>Checks whether the given value is a function.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="function"><span class="keyword">function</span> <span class="title">isFunction</span><span class="params">(val)</span> {</span>
-    <span class="keyword">return</span> <span class="keyword">typeof</span> val == <span class="string">'function'</span>;
-}</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-3">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-3">&#182;</a>
-              </div>
               <p>Wraps a function to be called in a backoff loop.</p>
 
             </div>
@@ -112,15 +96,9 @@
             <div class="content"><div class='highlight'><pre><span class="function"><span class="keyword">function</span> <span class="title">FunctionCall</span><span class="params">(fn, args, callback)</span> {</span>
     events.EventEmitter.call(<span class="keyword">this</span>);
 
-    <span class="keyword">if</span> (!isFunction(fn)) {
-        <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">'fn should be a function.'</span> +
-                        <span class="string">'Actual: '</span> + <span class="keyword">typeof</span> fn);
-    }
-
-    <span class="keyword">if</span> (!isFunction(callback)) {
-        <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">'callback should be a function.'</span> +
-                        <span class="string">'Actual: '</span> + <span class="keyword">typeof</span> fn);
-    }
+    precond.checkIsFunction(fn, <span class="string">'Expected fn to be a function.'</span>);
+    precond.checkIsArray(args, <span class="string">'Expected args to be an array.'</span>);
+    precond.checkIsFunction(callback, <span class="string">'Expected callback to be a function.'</span>);
 
     <span class="keyword">this</span>.function_ = fn;
     <span class="keyword">this</span>.arguments_ = args;
@@ -138,11 +116,11 @@ util.inherits(FunctionCall, events.EventEmitter);</pre></div></div>
         </li>
         
         
-        <li id="section-4">
+        <li id="section-3">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+                <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
               <p>States in which the call can be.</p>
 
@@ -153,11 +131,11 @@ util.inherits(FunctionCall, events.EventEmitter);</pre></div></div>
         </li>
         
         
-        <li id="section-5">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
               <p>Call isn&#39;t started yet.</p>
 
@@ -168,11 +146,11 @@ util.inherits(FunctionCall, events.EventEmitter);</pre></div></div>
         </li>
         
         
-        <li id="section-6">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <p>Call is in progress.</p>
 
@@ -183,11 +161,11 @@ util.inherits(FunctionCall, events.EventEmitter);</pre></div></div>
         </li>
         
         
-        <li id="section-7">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>Call completed successfully which means that either the wrapped function
 returned successfully or the maximal number of backoffs was reached.</p>
@@ -199,11 +177,11 @@ returned successfully or the maximal number of backoffs was reached.</p>
         </li>
         
         
-        <li id="section-8">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>The call was aborted.</p>
 
@@ -215,11 +193,11 @@ returned successfully or the maximal number of backoffs was reached.</p>
         </li>
         
         
-        <li id="section-9">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <p>Checks whether the call is pending.</p>
 
@@ -232,11 +210,11 @@ returned successfully or the maximal number of backoffs was reached.</p>
         </li>
         
         
-        <li id="section-10">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <p>Checks whether the call is in progress.</p>
 
@@ -249,11 +227,11 @@ returned successfully or the maximal number of backoffs was reached.</p>
         </li>
         
         
-        <li id="section-11">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <p>Checks whether the call is completed.</p>
 
@@ -266,11 +244,11 @@ returned successfully or the maximal number of backoffs was reached.</p>
         </li>
         
         
-        <li id="section-12">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p>Checks whether the call is aborted.</p>
 
@@ -283,11 +261,11 @@ returned successfully or the maximal number of backoffs was reached.</p>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <p>Sets the backoff strategy to use. Can only be called before the call is
 started otherwise an exception will be thrown.</p>
@@ -295,9 +273,7 @@ started otherwise an exception will be thrown.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>FunctionCall.prototype.setStrategy = <span class="keyword">function</span>(strategy) {
-    <span class="keyword">if</span> (!<span class="keyword">this</span>.isPending()) {
-        <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">'FunctionCall in progress.'</span>);
-    }
+    precond.checkState(<span class="keyword">this</span>.isPending(), <span class="string">'FunctionCall in progress.'</span>);
     <span class="keyword">this</span>.strategy_ = strategy;
     <span class="keyword">return</span> <span class="keyword">this</span>; <span class="comment">// Return this for chaining.</span>
 };</pre></div></div>
@@ -305,11 +281,11 @@ started otherwise an exception will be thrown.</p>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <p>Returns all intermediary results returned by the wrapped function since
 the initial call.</p>
@@ -323,20 +299,18 @@ the initial call.</p>
         </li>
         
         
-        <li id="section-15">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p>Sets the backoff limit.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>FunctionCall.prototype.failAfter = <span class="keyword">function</span>(maxNumberOfRetry) {
-    <span class="keyword">if</span> (!<span class="keyword">this</span>.isPending()) {
-        <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">'FunctionCall in progress.'</span>);
-    }
+    precond.checkState(<span class="keyword">this</span>.isPending(), <span class="string">'FunctionCall in progress.'</span>);
     <span class="keyword">this</span>.failAfter_ = maxNumberOfRetry;
     <span class="keyword">return</span> <span class="keyword">this</span>; <span class="comment">// Return this for chaining.</span>
 };</pre></div></div>
@@ -344,20 +318,18 @@ the initial call.</p>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>Aborts the call.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>FunctionCall.prototype.abort = <span class="keyword">function</span>() {
-    <span class="keyword">if</span> (<span class="keyword">this</span>.isCompleted()) {
-        <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">'FunctionCall already completed.'</span>);
-    }
+    precond.checkState(!<span class="keyword">this</span>.isCompleted(), <span class="string">'FunctionCall already completed.'</span>);
 
     <span class="keyword">if</span> (<span class="keyword">this</span>.isRunning()) {
         <span class="keyword">this</span>.backoff_.reset();
@@ -369,11 +341,11 @@ the initial call.</p>
         </li>
         
         
-        <li id="section-17">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p>Initiates the call to the wrapped function. Accepts an optional factory
 function used to create the backoff instance; used when testing.</p>
@@ -381,11 +353,8 @@ function used to create the backoff instance; used when testing.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>FunctionCall.prototype.start = <span class="keyword">function</span>(backoffFactory) {
-    <span class="keyword">if</span> (<span class="keyword">this</span>.isAborted()) {
-        <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">'FunctionCall aborted.'</span>);
-    } <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="keyword">this</span>.isPending()) {
-        <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">'FunctionCall already started.'</span>);
-    }
+    precond.checkState(!<span class="keyword">this</span>.isAborted(), <span class="string">'FunctionCall aborted.'</span>);
+    precond.checkState(<span class="keyword">this</span>.isPending(), <span class="string">'FunctionCall already started.'</span>);
 
     <span class="keyword">var</span> strategy = <span class="keyword">this</span>.strategy_ || <span class="keyword">new</span> FibonacciBackoffStrategy();
 
@@ -408,11 +377,11 @@ function used to create the backoff instance; used when testing.</p>
         </li>
         
         
-        <li id="section-18">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>Calls the wrapped function.</p>
 
@@ -428,11 +397,11 @@ function used to create the backoff instance; used when testing.</p>
         </li>
         
         
-        <li id="section-19">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>Calls the wrapped function&#39;s callback with the last result returned by the
 wrapped function.</p>
@@ -447,11 +416,11 @@ wrapped function.</p>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>Handles wrapped function&#39;s completion. This method acts as a replacement
 for the original callback function.</p>
@@ -478,11 +447,11 @@ for the original callback function.</p>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>Handles the backoff event by reemitting it.</p>
 

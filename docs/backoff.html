@@ -74,6 +74,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="keyword">var</span> events = require(<span class="string">'events'</span>);
+<span class="keyword">var</span> precond = require(<span class="string">'precond'</span>);
 <span class="keyword">var</span> util = require(<span class="string">'util'</span>);</pre></div></div>
             
         </li>
@@ -120,10 +121,9 @@ event will be emitted when the limit is reached.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>Backoff.prototype.failAfter = <span class="keyword">function</span>(maxNumberOfRetry) {
-    <span class="keyword">if</span> (maxNumberOfRetry &lt; <span class="number">1</span>) {
-        <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">'Maximum number of retry must be greater than 0. '</span> +
-                        <span class="string">'Actual: '</span> + maxNumberOfRetry);
-    }
+    precond.checkArgument(maxNumberOfRetry &gt; <span class="number">0</span>,
+        <span class="string">'Expected a maximum number of retry greater than 0 but got %s.'</span>,
+        maxNumberOfRetry);
 
     <span class="keyword">this</span>.maxNumberOfRetry_ = maxNumberOfRetry;
 };</pre></div></div>
@@ -143,9 +143,7 @@ listeners know why the backoff operation was started.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>Backoff.prototype.backoff = <span class="keyword">function</span>(err) {
-    <span class="keyword">if</span> (<span class="keyword">this</span>.timeoutID_ !== -<span class="number">1</span>) {
-        <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">'Backoff in progress.'</span>);
-    }
+    precond.checkState(<span class="keyword">this</span>.timeoutID_ === -<span class="number">1</span>, <span class="string">'Backoff in progress.'</span>);
 
     <span class="keyword">if</span> (<span class="keyword">this</span>.backoffNumber_ === <span class="keyword">this</span>.maxNumberOfRetry_) {
         <span class="keyword">this</span>.emit(<span class="string">'fail'</span>, err);
