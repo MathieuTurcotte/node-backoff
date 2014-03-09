@@ -1,7 +1,6 @@
 # Backoff for Node.js
 [![Build Status](https://secure.travis-ci.org/MathieuTurcotte/node-backoff.png?branch=master)](http://travis-ci.org/MathieuTurcotte/node-backoff)
 [![NPM version](https://badge.fury.io/js/backoff.png)](http://badge.fury.io/js/backoff)
-[![Dependency Status](https://david-dm.org/MathieuTurcotte/node-backoff.png)](https://david-dm.org/MathieuTurcotte/node-backoff)
 
 Fibonacci and exponential backoffs for Node.js.
 
