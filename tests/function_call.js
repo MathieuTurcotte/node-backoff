@@ -48,7 +48,9 @@ exports["FunctionCall"] = {
     },
 
     "isPending should return false once the call is started": function(test) {
-        this.wrappedFn.yields(new Error()).yields(null, 'Success!');
+        this.wrappedFn.
+            onFirstCall().yields(new Error()).
+            onSecondCall().yields(null, 'Success!');
         var call = new FunctionCall(this.wrappedFn, [], this.callback);
 
         test.ok(call.isPending());
@@ -63,7 +65,9 @@ exports["FunctionCall"] = {
     },
 
     "isRunning should return true when call is in progress": function(test) {
-        this.wrappedFn.yields(new Error()).yields(null, 'Success!');
+        this.wrappedFn.
+            onFirstCall().yields(new Error()).
+            onSecondCall().yields(null, 'Success!');
         var call = new FunctionCall(this.wrappedFn, [], this.callback);
 
         test.ok(!call.isRunning());
@@ -78,7 +82,9 @@ exports["FunctionCall"] = {
     },
 
     "isCompleted should return true once the call completes": function(test) {
-        this.wrappedFn.yields(new Error()).yields(null, 'Success!');
+        this.wrappedFn.
+            onFirstCall().yields(new Error()).
+            onSecondCall().yields(null, 'Success!');
         var call = new FunctionCall(this.wrappedFn, [], this.callback);
 
         test.ok(!call.isCompleted());
@@ -93,7 +99,9 @@ exports["FunctionCall"] = {
     },
 
     "isAborted should return true once the call is aborted": function(test) {
-        this.wrappedFn.yields(new Error()).yields(null, 'Success!');
+        this.wrappedFn.
+            onFirstCall().yields(new Error()).
+            onSecondCall().yields(null, 'Success!');
         var call = new FunctionCall(this.wrappedFn, [], this.callback);
 
         test.ok(!call.isAborted());
@@ -181,10 +189,11 @@ exports["FunctionCall"] = {
 
     "call should complete when the wrapped function succeeds": function(test) {
         var call = new FunctionCall(this.wrappedFn, [1, 2, 3], this.callback);
-        this.wrappedFn.yields(new Error())
-            .yields(new Error())
-            .yields(new Error())
-            .yields(null, 'Success!');
+        this.wrappedFn.
+            onCall(0).yields(new Error()).
+            onCall(1).yields(new Error()).
+            onCall(2).yields(new Error()).
+            onCall(3).yields(null, 'Success!');
 
         call.start(this.backoffFactory);
 

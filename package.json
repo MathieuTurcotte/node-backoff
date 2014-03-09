@@ -13,7 +13,7 @@
         "precond": "0.2"
     },
     "devDependencies": {
-        "sinon": "1.7",
+        "sinon": "1.9",
         "nodeunit": "0.8",
         "jshint": "2.4",
         "docco": "0.6"
