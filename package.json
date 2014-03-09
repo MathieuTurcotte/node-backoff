@@ -10,7 +10,7 @@
         "url": "https://github.com/MathieuTurcotte/node-backoff.git"
     },
     "dependencies": {
-        "precond": "0.1"
+        "precond": "0.2"
     },
     "devDependencies": {
         "sinon": "1.7",
