@@ -25,5 +25,9 @@
     },
     "engines": {
         "node": ">= 0.6"
-    }
+    },
+    "file": [
+        "index.js",
+        "lib"
+    ]
 }
