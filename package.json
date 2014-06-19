@@ -14,7 +14,7 @@
     },
     "devDependencies": {
         "sinon": "1.10",
-        "nodeunit": "0.8",
+        "nodeunit": "0.9",
         "jshint": "2.4",
         "docco": "0.6"
     },
