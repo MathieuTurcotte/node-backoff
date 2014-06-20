@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.4.0
+
+- Replace `FunctionCall.getResults` by `FunctionCall.getLastResult` to avoid
+  storing intermediary results forever as this may lead to memory exhaustion
+  when used in conjunction with an infinite number of backoffs.
+
 ## 2.3.0
 
 - Add four new methods to `FunctionCall` to query the state of the call.
