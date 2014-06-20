@@ -90,8 +90,6 @@ Typical usage looks like the following.
 
 ``` js
 var call = backoff.call(get, 'https://duplika.ca/', function(err, res) {
-    console.log('Retries: ' + call.getResults().length);
-
     if (err) {
         console.log('Error: ' + err.message);
     } else {
@@ -292,19 +290,20 @@ there is no limit on the number of backoffs that can be performed.
 This method should be called before `call.start()` otherwise an exception will
 be thrown..
 
-#### call.getResults()
+#### call.getLastResult()
 
-Retrieves all intermediary results returned by the wrapped function. This
+Retrieves the last intermediary result returned by the wrapped function. This
 method can be called at any point in time during the call life cycle, i.e.
 before, during and after the wrapped function invocation.
 
-Returns an array of arrays containing the results returned by the wrapped
-function for each call. For example, to get the error code returned by the
-second call, one would do the following.
+Returns an array containing the results returned by the last wrapped function
+call. For example, to get the error code returned by the last call, one would
+do the following.
 
 ``` js
-var results = call.getResults();
-var error = results[1][0];
+var results = call.getLastResult();
+// The error code is the first parameter of the callback.
+var error = results[0];
 ```
 
 #### call.start()
@@ -317,9 +316,9 @@ once otherwise an exception will be thrown.
 
 Aborts the call.
 
-Past results can be retrieved using `call.getResults()`. This method can be
-called at any point in time during the call life cycle, i.e. before, during
-and after the wrapped function invocation.
+The last result can be retrieved using `call.getLastResult()`. This method
+can be called at any point in time during the call life cycle, i.e. before,
+during and after the wrapped function invocation.
 
 #### Event: 'call'
 

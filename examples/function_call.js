@@ -27,7 +27,7 @@ function get(options, callback) {
 
 var call = backoff.call(get, URL, function(err, res) {
     // Notice how the call is captured inside the closure.
-    console.log('Retries: ' + call.getResults().length);
+    console.log('Last result: ' + util.inspect(call.getLastResult()));
 
     if (err) {
         console.log('Error: ' + err.message);

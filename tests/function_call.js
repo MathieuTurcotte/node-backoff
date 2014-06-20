@@ -241,7 +241,7 @@ exports["FunctionCall"] = {
         test.done();
     },
 
-    "getResults should return intermediary results": function(test) {
+    "getLastResult should return the last intermediary result": function(test) {
         var call = new FunctionCall(this.wrappedFn, [], this.callback);
         this.wrappedFn.yields(1);
         call.start(this.backoffFactory);
@@ -249,12 +249,13 @@ exports["FunctionCall"] = {
         for (var i = 2; i < 5; i++) {
             this.wrappedFn.yields(i);
             this.backoff.emit('ready');
+            test.deepEqual([i], call.getLastResult());
         }
 
         this.wrappedFn.yields(null);
         this.backoff.emit('ready');
+        test.deepEqual([null], call.getLastResult());
 
-        test.deepEqual([[1], [2], [3], [4], [null]], call.getResults());
         test.done();
     },
 
