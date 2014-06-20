@@ -14,13 +14,11 @@
     },
     "devDependencies": {
         "sinon": "1.10",
-        "nodeunit": "0.9",
-        "jshint": "2.4",
-        "docco": "0.6"
+        "nodeunit": "0.9"
     },
     "scripts": {
-        "docco" : "node_modules/.bin/docco lib/*.js lib/strategy/* index.js",
-        "pretest": "node_modules/jshint/bin/jshint lib/ tests/ examples/ index.js",
+        "docco" : "docco lib/*.js lib/strategy/* index.js",
+        "pretest": "jshint lib/ tests/ examples/ index.js",
         "test": "node_modules/nodeunit/bin/nodeunit tests/"
     },
     "engines": {
