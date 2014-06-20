@@ -1,7 +1,6 @@
 language: node_js
 
 before_install:
-  - npm install -g docco
   - npm install -g jshint
 
 node_js:
