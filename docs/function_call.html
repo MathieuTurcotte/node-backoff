@@ -103,7 +103,7 @@
     <span class="keyword">this</span>.function_ = fn;
     <span class="keyword">this</span>.arguments_ = args;
     <span class="keyword">this</span>.callback_ = callback;
-    <span class="keyword">this</span>.results_ = [];
+    <span class="keyword">this</span>.lastResult_ = [];
 
     <span class="keyword">this</span>.backoff_ = <span class="literal">null</span>;
     <span class="keyword">this</span>.strategy_ = <span class="literal">null</span>;
@@ -292,8 +292,8 @@ the initial call.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.getResults = <span class="keyword">function</span>() {
-    <span class="keyword">return</span> <span class="keyword">this</span>.results_.concat();
+            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.getLastResult = <span class="keyword">function</span>() {
+    <span class="keyword">return</span> <span class="keyword">this</span>.lastResult_.concat();
 };</pre></div></div>
             
         </li>
@@ -409,8 +409,7 @@ wrapped function.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>FunctionCall.prototype.doCallback_ = <span class="keyword">function</span>() {
-    <span class="keyword">var</span> args = <span class="keyword">this</span>.results_[<span class="keyword">this</span>.results_.length - <span class="number">1</span>];
-    <span class="keyword">this</span>.callback_.apply(<span class="literal">null</span>, args);
+    <span class="keyword">this</span>.callback_.apply(<span class="literal">null</span>, <span class="keyword">this</span>.lastResult_);
 };</pre></div></div>
             
         </li>
@@ -433,7 +432,7 @@ for the original callback function.</p>
     }
 
     <span class="keyword">var</span> args = Array.prototype.slice.call(arguments);
-    <span class="keyword">this</span>.results_.push(args); <span class="comment">// Save callback arguments.</span>
+    <span class="keyword">this</span>.lastResult_ = args; <span class="comment">// Save last callback arguments.</span>
     events.EventEmitter.prototype.emit.apply(<span class="keyword">this</span>, [<span class="string">'callback'</span>].concat(args));
 
     <span class="keyword">if</span> (args[<span class="number">0</span>]) {
