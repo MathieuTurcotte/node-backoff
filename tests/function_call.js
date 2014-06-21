@@ -259,6 +259,27 @@ exports["FunctionCall"] = {
         test.done();
     },
 
+    "getNumRetries should return the number of retries": function(test) {
+        var call = new FunctionCall(this.wrappedFn, [], this.callback);
+
+        this.wrappedFn.yields(1);
+        call.start(this.backoffFactory);
+        // The inital call doesn't count as a retry.
+        test.equals(0, call.getNumRetries());
+
+        for (var i = 2; i < 5; i++) {
+            this.wrappedFn.yields(i);
+            this.backoff.emit('ready');
+            test.equals(i - 1, call.getNumRetries());
+        }
+
+        this.wrappedFn.yields(null);
+        this.backoff.emit('ready');
+        test.equals(4, call.getNumRetries());
+
+        test.done();
+    },
+
     "wrapped function's errors should be propagated": function(test) {
         var call = new FunctionCall(this.wrappedFn, [1, 2, 3], this.callback);
         this.wrappedFn.throws(new Error());

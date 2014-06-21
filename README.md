@@ -90,6 +90,8 @@ Typical usage looks like the following.
 
 ``` js
 var call = backoff.call(get, 'https://duplika.ca/', function(err, res) {
+    console.log('Num retries: ' + call.getNumRetries());
+
     if (err) {
         console.log('Error: ' + err.message);
     } else {
@@ -305,6 +307,13 @@ var results = call.getLastResult();
 // The error code is the first parameter of the callback.
 var error = results[0];
 ```
+
+#### call.getNumRetries()
+
+Returns the number of times the wrapped function call was retried. For a
+wrapped function that succeeded immediately, this would return 0. This
+method can be called at any point in time during the call life cycle, i.e.
+before, during and after the wrapped function invocation.
 
 #### call.start()
 

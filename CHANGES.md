@@ -5,6 +5,8 @@
 - Replace `FunctionCall.getResults` by `FunctionCall.getLastResult` to avoid
   storing intermediary results forever as this may lead to memory exhaustion
   when used in conjunction with an infinite number of backoffs.
+- Add `FunctionCall.getNumRetries` which returns the number of times the
+  wrapped function was retried.
 
 ## 2.3.0
 

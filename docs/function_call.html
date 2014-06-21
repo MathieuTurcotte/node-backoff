@@ -104,6 +104,7 @@
     <span class="keyword">this</span>.arguments_ = args;
     <span class="keyword">this</span>.callback_ = callback;
     <span class="keyword">this</span>.lastResult_ = [];
+    <span class="keyword">this</span>.numRetries_ = <span class="number">0</span>;
 
     <span class="keyword">this</span>.backoff_ = <span class="literal">null</span>;
     <span class="keyword">this</span>.strategy_ = <span class="literal">null</span>;
@@ -305,6 +306,23 @@ the initial call.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
+              <p>Returns the number of times the wrapped function call was retried.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.getNumRetries = <span class="keyword">function</span>() {
+    <span class="keyword">return</span> <span class="keyword">this</span>.numRetries_;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
               <p>Sets the backoff limit.</p>
 
             </div>
@@ -318,11 +336,11 @@ the initial call.</p>
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p>Aborts the call.</p>
 
@@ -341,11 +359,11 @@ the initial call.</p>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>Initiates the call to the wrapped function. Accepts an optional factory
 function used to create the backoff instance; used when testing.</p>
@@ -362,7 +380,7 @@ function used to create the backoff instance; used when testing.</p>
         backoffFactory(strategy) :
         <span class="keyword">new</span> Backoff(strategy);
 
-    <span class="keyword">this</span>.backoff_.on(<span class="string">'ready'</span>, <span class="keyword">this</span>.doCall_.bind(<span class="keyword">this</span>));
+    <span class="keyword">this</span>.backoff_.on(<span class="string">'ready'</span>, <span class="keyword">this</span>.doCall_.bind(<span class="keyword">this</span>, <span class="literal">true</span> <span class="comment">/* isRetry */</span>));
     <span class="keyword">this</span>.backoff_.on(<span class="string">'fail'</span>, <span class="keyword">this</span>.doCallback_.bind(<span class="keyword">this</span>));
     <span class="keyword">this</span>.backoff_.on(<span class="string">'backoff'</span>, <span class="keyword">this</span>.handleBackoff_.bind(<span class="keyword">this</span>));
 
@@ -371,27 +389,7 @@ function used to create the backoff instance; used when testing.</p>
     }
 
     <span class="keyword">this</span>.state_ = FunctionCall.State_.RUNNING;
-    <span class="keyword">this</span>.doCall_();
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
-              </div>
-              <p>Calls the wrapped function.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.doCall_ = <span class="keyword">function</span>() {
-    <span class="keyword">var</span> eventArgs = [<span class="string">'call'</span>].concat(<span class="keyword">this</span>.arguments_);
-    events.EventEmitter.prototype.emit.apply(<span class="keyword">this</span>, eventArgs);
-    <span class="keyword">var</span> callback = <span class="keyword">this</span>.handleFunctionCallback_.bind(<span class="keyword">this</span>);
-    <span class="keyword">this</span>.function_.apply(<span class="literal">null</span>, <span class="keyword">this</span>.arguments_.concat(callback));
+    <span class="keyword">this</span>.doCall_(<span class="literal">false</span> <span class="comment">/* isRetry */</span>);
 };</pre></div></div>
             
         </li>
@@ -402,6 +400,29 @@ function used to create the backoff instance; used when testing.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Calls the wrapped function.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.doCall_ = <span class="keyword">function</span>(isRetry) {
+    <span class="keyword">if</span> (isRetry) {
+        <span class="keyword">this</span>.numRetries_++;
+    }
+    <span class="keyword">var</span> eventArgs = [<span class="string">'call'</span>].concat(<span class="keyword">this</span>.arguments_);
+    events.EventEmitter.prototype.emit.apply(<span class="keyword">this</span>, eventArgs);
+    <span class="keyword">var</span> callback = <span class="keyword">this</span>.handleFunctionCallback_.bind(<span class="keyword">this</span>);
+    <span class="keyword">this</span>.function_.apply(<span class="literal">null</span>, <span class="keyword">this</span>.arguments_.concat(callback));
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>Calls the wrapped function&#39;s callback with the last result returned by the
 wrapped function.</p>
@@ -415,11 +436,11 @@ wrapped function.</p>
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>Handles wrapped function&#39;s completion. This method acts as a replacement
 for the original callback function.</p>
@@ -446,11 +467,11 @@ for the original callback function.</p>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>Handles the backoff event by reemitting it.</p>
 
