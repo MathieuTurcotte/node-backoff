@@ -68,17 +68,18 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <pre><code> Copyright (c) 2012 Mathieu Turcotte
- Licensed under the MIT license.</code></pre>
-
+              <pre><code> Copyright (c) <span class="hljs-number">2012</span> Mathieu Turcotte
+ Licensed under the MIT license.
+</code></pre>
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> events = require(<span class="string">'events'</span>);
-<span class="keyword">var</span> precond = require(<span class="string">'precond'</span>);
-<span class="keyword">var</span> util = require(<span class="string">'util'</span>);
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-keyword">var</span> events = <span class="hljs-built_in">require</span>(<span class="hljs-string">'events'</span>);
+<span class="hljs-keyword">var</span> precond = <span class="hljs-built_in">require</span>(<span class="hljs-string">'precond'</span>);
+<span class="hljs-keyword">var</span> util = <span class="hljs-built_in">require</span>(<span class="hljs-string">'util'</span>);
 
-<span class="keyword">var</span> Backoff = require(<span class="string">'./backoff'</span>);
-<span class="keyword">var</span> FibonacciBackoffStrategy = require(<span class="string">'./strategy/fibonacci'</span>);</pre></div></div>
+<span class="hljs-keyword">var</span> Backoff = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./backoff'</span>);
+<span class="hljs-keyword">var</span> FibonacciBackoffStrategy = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./strategy/fibonacci'</span>);</pre></div></div>
             
         </li>
         
@@ -93,24 +94,24 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="function"><span class="keyword">function</span> <span class="title">FunctionCall</span><span class="params">(fn, args, callback)</span> {</span>
-    events.EventEmitter.call(<span class="keyword">this</span>);
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">FunctionCall</span><span class="hljs-params">(fn, args, callback)</span> {</span>
+    events.EventEmitter.call(<span class="hljs-keyword">this</span>);
 
-    precond.checkIsFunction(fn, <span class="string">'Expected fn to be a function.'</span>);
-    precond.checkIsArray(args, <span class="string">'Expected args to be an array.'</span>);
-    precond.checkIsFunction(callback, <span class="string">'Expected callback to be a function.'</span>);
+    precond.checkIsFunction(fn, <span class="hljs-string">'Expected fn to be a function.'</span>);
+    precond.checkIsArray(args, <span class="hljs-string">'Expected args to be an array.'</span>);
+    precond.checkIsFunction(callback, <span class="hljs-string">'Expected callback to be a function.'</span>);
 
-    <span class="keyword">this</span>.function_ = fn;
-    <span class="keyword">this</span>.arguments_ = args;
-    <span class="keyword">this</span>.callback_ = callback;
-    <span class="keyword">this</span>.lastResult_ = [];
-    <span class="keyword">this</span>.numRetries_ = <span class="number">0</span>;
+    <span class="hljs-keyword">this</span>.function_ = fn;
+    <span class="hljs-keyword">this</span>.arguments_ = args;
+    <span class="hljs-keyword">this</span>.callback_ = callback;
+    <span class="hljs-keyword">this</span>.lastResult_ = [];
+    <span class="hljs-keyword">this</span>.numRetries_ = <span class="hljs-number">0</span>;
 
-    <span class="keyword">this</span>.backoff_ = <span class="literal">null</span>;
-    <span class="keyword">this</span>.strategy_ = <span class="literal">null</span>;
-    <span class="keyword">this</span>.failAfter_ = -<span class="number">1</span>;
+    <span class="hljs-keyword">this</span>.backoff_ = <span class="hljs-literal">null</span>;
+    <span class="hljs-keyword">this</span>.strategy_ = <span class="hljs-literal">null</span>;
+    <span class="hljs-keyword">this</span>.failAfter_ = -<span class="hljs-number">1</span>;
 
-    <span class="keyword">this</span>.state_ = FunctionCall.State_.PENDING;
+    <span class="hljs-keyword">this</span>.state_ = FunctionCall.State_.PENDING;
 }
 util.inherits(FunctionCall, events.EventEmitter);</pre></div></div>
             
@@ -138,11 +139,11 @@ util.inherits(FunctionCall, events.EventEmitter);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>Call isn&#39;t started yet.</p>
+              <p>Call isn’t started yet.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    PENDING: <span class="number">0</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    PENDING: <span class="hljs-number">0</span>,</pre></div></div>
             
         </li>
         
@@ -157,7 +158,7 @@ util.inherits(FunctionCall, events.EventEmitter);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    RUNNING: <span class="number">1</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    RUNNING: <span class="hljs-number">1</span>,</pre></div></div>
             
         </li>
         
@@ -173,7 +174,7 @@ returned successfully or the maximal number of backoffs was reached.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    COMPLETED: <span class="number">2</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    COMPLETED: <span class="hljs-number">2</span>,</pre></div></div>
             
         </li>
         
@@ -188,7 +189,7 @@ returned successfully or the maximal number of backoffs was reached.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    ABORTED: <span class="number">3</span>
+            <div class="content"><div class='highlight'><pre>    ABORTED: <span class="hljs-number">3</span>
 };</pre></div></div>
             
         </li>
@@ -204,8 +205,8 @@ returned successfully or the maximal number of backoffs was reached.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.isPending = <span class="keyword">function</span>() {
-    <span class="keyword">return</span> <span class="keyword">this</span>.state_ == FunctionCall.State_.PENDING;
+            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.isPending = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.state_ == FunctionCall.State_.PENDING;
 };</pre></div></div>
             
         </li>
@@ -221,8 +222,8 @@ returned successfully or the maximal number of backoffs was reached.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.isRunning = <span class="keyword">function</span>() {
-    <span class="keyword">return</span> <span class="keyword">this</span>.state_ == FunctionCall.State_.RUNNING;
+            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.isRunning = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.state_ == FunctionCall.State_.RUNNING;
 };</pre></div></div>
             
         </li>
@@ -238,8 +239,8 @@ returned successfully or the maximal number of backoffs was reached.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.isCompleted = <span class="keyword">function</span>() {
-    <span class="keyword">return</span> <span class="keyword">this</span>.state_ == FunctionCall.State_.COMPLETED;
+            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.isCompleted = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.state_ == FunctionCall.State_.COMPLETED;
 };</pre></div></div>
             
         </li>
@@ -255,8 +256,8 @@ returned successfully or the maximal number of backoffs was reached.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.isAborted = <span class="keyword">function</span>() {
-    <span class="keyword">return</span> <span class="keyword">this</span>.state_ == FunctionCall.State_.ABORTED;
+            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.isAborted = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.state_ == FunctionCall.State_.ABORTED;
 };</pre></div></div>
             
         </li>
@@ -273,10 +274,10 @@ started otherwise an exception will be thrown.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.setStrategy = <span class="keyword">function</span>(strategy) {
-    precond.checkState(<span class="keyword">this</span>.isPending(), <span class="string">'FunctionCall in progress.'</span>);
-    <span class="keyword">this</span>.strategy_ = strategy;
-    <span class="keyword">return</span> <span class="keyword">this</span>; <span class="comment">// Return this for chaining.</span>
+            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.setStrategy = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(strategy)</span> {</span>
+    precond.checkState(<span class="hljs-keyword">this</span>.isPending(), <span class="hljs-string">'FunctionCall in progress.'</span>);
+    <span class="hljs-keyword">this</span>.strategy_ = strategy;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; <span class="hljs-comment">// Return this for chaining.</span>
 };</pre></div></div>
             
         </li>
@@ -293,8 +294,8 @@ the initial call.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.getLastResult = <span class="keyword">function</span>() {
-    <span class="keyword">return</span> <span class="keyword">this</span>.lastResult_.concat();
+            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.getLastResult = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.lastResult_.concat();
 };</pre></div></div>
             
         </li>
@@ -310,8 +311,8 @@ the initial call.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.getNumRetries = <span class="keyword">function</span>() {
-    <span class="keyword">return</span> <span class="keyword">this</span>.numRetries_;
+            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.getNumRetries = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.numRetries_;
 };</pre></div></div>
             
         </li>
@@ -327,10 +328,10 @@ the initial call.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.failAfter = <span class="keyword">function</span>(maxNumberOfRetry) {
-    precond.checkState(<span class="keyword">this</span>.isPending(), <span class="string">'FunctionCall in progress.'</span>);
-    <span class="keyword">this</span>.failAfter_ = maxNumberOfRetry;
-    <span class="keyword">return</span> <span class="keyword">this</span>; <span class="comment">// Return this for chaining.</span>
+            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.failAfter = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(maxNumberOfRetry)</span> {</span>
+    precond.checkState(<span class="hljs-keyword">this</span>.isPending(), <span class="hljs-string">'FunctionCall in progress.'</span>);
+    <span class="hljs-keyword">this</span>.failAfter_ = maxNumberOfRetry;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; <span class="hljs-comment">// Return this for chaining.</span>
 };</pre></div></div>
             
         </li>
@@ -346,14 +347,14 @@ the initial call.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.abort = <span class="keyword">function</span>() {
-    precond.checkState(!<span class="keyword">this</span>.isCompleted(), <span class="string">'FunctionCall already completed.'</span>);
+            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.abort = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    precond.checkState(!<span class="hljs-keyword">this</span>.isCompleted(), <span class="hljs-string">'FunctionCall already completed.'</span>);
 
-    <span class="keyword">if</span> (<span class="keyword">this</span>.isRunning()) {
-        <span class="keyword">this</span>.backoff_.reset();
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.isRunning()) {
+        <span class="hljs-keyword">this</span>.backoff_.reset();
     }
 
-    <span class="keyword">this</span>.state_ = FunctionCall.State_.ABORTED;
+    <span class="hljs-keyword">this</span>.state_ = FunctionCall.State_.ABORTED;
 };</pre></div></div>
             
         </li>
@@ -370,26 +371,26 @@ function used to create the backoff instance; used when testing.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.start = <span class="keyword">function</span>(backoffFactory) {
-    precond.checkState(!<span class="keyword">this</span>.isAborted(), <span class="string">'FunctionCall aborted.'</span>);
-    precond.checkState(<span class="keyword">this</span>.isPending(), <span class="string">'FunctionCall already started.'</span>);
+            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.start = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(backoffFactory)</span> {</span>
+    precond.checkState(!<span class="hljs-keyword">this</span>.isAborted(), <span class="hljs-string">'FunctionCall aborted.'</span>);
+    precond.checkState(<span class="hljs-keyword">this</span>.isPending(), <span class="hljs-string">'FunctionCall already started.'</span>);
 
-    <span class="keyword">var</span> strategy = <span class="keyword">this</span>.strategy_ || <span class="keyword">new</span> FibonacciBackoffStrategy();
+    <span class="hljs-keyword">var</span> strategy = <span class="hljs-keyword">this</span>.strategy_ || <span class="hljs-keyword">new</span> FibonacciBackoffStrategy();
 
-    <span class="keyword">this</span>.backoff_ = backoffFactory ?
+    <span class="hljs-keyword">this</span>.backoff_ = backoffFactory ?
         backoffFactory(strategy) :
-        <span class="keyword">new</span> Backoff(strategy);
+        <span class="hljs-keyword">new</span> Backoff(strategy);
 
-    <span class="keyword">this</span>.backoff_.on(<span class="string">'ready'</span>, <span class="keyword">this</span>.doCall_.bind(<span class="keyword">this</span>, <span class="literal">true</span> <span class="comment">/* isRetry */</span>));
-    <span class="keyword">this</span>.backoff_.on(<span class="string">'fail'</span>, <span class="keyword">this</span>.doCallback_.bind(<span class="keyword">this</span>));
-    <span class="keyword">this</span>.backoff_.on(<span class="string">'backoff'</span>, <span class="keyword">this</span>.handleBackoff_.bind(<span class="keyword">this</span>));
+    <span class="hljs-keyword">this</span>.backoff_.on(<span class="hljs-string">'ready'</span>, <span class="hljs-keyword">this</span>.doCall_.bind(<span class="hljs-keyword">this</span>, <span class="hljs-literal">true</span> <span class="hljs-comment">/* isRetry */</span>));
+    <span class="hljs-keyword">this</span>.backoff_.on(<span class="hljs-string">'fail'</span>, <span class="hljs-keyword">this</span>.doCallback_.bind(<span class="hljs-keyword">this</span>));
+    <span class="hljs-keyword">this</span>.backoff_.on(<span class="hljs-string">'backoff'</span>, <span class="hljs-keyword">this</span>.handleBackoff_.bind(<span class="hljs-keyword">this</span>));
 
-    <span class="keyword">if</span> (<span class="keyword">this</span>.failAfter_ &gt; <span class="number">0</span>) {
-        <span class="keyword">this</span>.backoff_.failAfter(<span class="keyword">this</span>.failAfter_);
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.failAfter_ &gt; <span class="hljs-number">0</span>) {
+        <span class="hljs-keyword">this</span>.backoff_.failAfter(<span class="hljs-keyword">this</span>.failAfter_);
     }
 
-    <span class="keyword">this</span>.state_ = FunctionCall.State_.RUNNING;
-    <span class="keyword">this</span>.doCall_(<span class="literal">false</span> <span class="comment">/* isRetry */</span>);
+    <span class="hljs-keyword">this</span>.state_ = FunctionCall.State_.RUNNING;
+    <span class="hljs-keyword">this</span>.doCall_(<span class="hljs-literal">false</span> <span class="hljs-comment">/* isRetry */</span>);
 };</pre></div></div>
             
         </li>
@@ -405,14 +406,14 @@ function used to create the backoff instance; used when testing.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.doCall_ = <span class="keyword">function</span>(isRetry) {
-    <span class="keyword">if</span> (isRetry) {
-        <span class="keyword">this</span>.numRetries_++;
+            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.doCall_ = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(isRetry)</span> {</span>
+    <span class="hljs-keyword">if</span> (isRetry) {
+        <span class="hljs-keyword">this</span>.numRetries_++;
     }
-    <span class="keyword">var</span> eventArgs = [<span class="string">'call'</span>].concat(<span class="keyword">this</span>.arguments_);
-    events.EventEmitter.prototype.emit.apply(<span class="keyword">this</span>, eventArgs);
-    <span class="keyword">var</span> callback = <span class="keyword">this</span>.handleFunctionCallback_.bind(<span class="keyword">this</span>);
-    <span class="keyword">this</span>.function_.apply(<span class="literal">null</span>, <span class="keyword">this</span>.arguments_.concat(callback));
+    <span class="hljs-keyword">var</span> eventArgs = [<span class="hljs-string">'call'</span>].concat(<span class="hljs-keyword">this</span>.arguments_);
+    events.EventEmitter.prototype.emit.apply(<span class="hljs-keyword">this</span>, eventArgs);
+    <span class="hljs-keyword">var</span> callback = <span class="hljs-keyword">this</span>.handleFunctionCallback_.bind(<span class="hljs-keyword">this</span>);
+    <span class="hljs-keyword">this</span>.function_.apply(<span class="hljs-literal">null</span>, <span class="hljs-keyword">this</span>.arguments_.concat(callback));
 };</pre></div></div>
             
         </li>
@@ -424,13 +425,13 @@ function used to create the backoff instance; used when testing.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <p>Calls the wrapped function&#39;s callback with the last result returned by the
+              <p>Calls the wrapped function’s callback with the last result returned by the
 wrapped function.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.doCallback_ = <span class="keyword">function</span>() {
-    <span class="keyword">this</span>.callback_.apply(<span class="literal">null</span>, <span class="keyword">this</span>.lastResult_);
+            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.doCallback_ = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">this</span>.callback_.apply(<span class="hljs-literal">null</span>, <span class="hljs-keyword">this</span>.lastResult_);
 };</pre></div></div>
             
         </li>
@@ -442,25 +443,25 @@ wrapped function.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <p>Handles wrapped function&#39;s completion. This method acts as a replacement
+              <p>Handles wrapped function’s completion. This method acts as a replacement
 for the original callback function.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.handleFunctionCallback_ = <span class="keyword">function</span>() {
-    <span class="keyword">if</span> (<span class="keyword">this</span>.isAborted()) {
-        <span class="keyword">return</span>;
+            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.handleFunctionCallback_ = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.isAborted()) {
+        <span class="hljs-keyword">return</span>;
     }
 
-    <span class="keyword">var</span> args = Array.prototype.slice.call(arguments);
-    <span class="keyword">this</span>.lastResult_ = args; <span class="comment">// Save last callback arguments.</span>
-    events.EventEmitter.prototype.emit.apply(<span class="keyword">this</span>, [<span class="string">'callback'</span>].concat(args));
+    <span class="hljs-keyword">var</span> args = <span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>);
+    <span class="hljs-keyword">this</span>.lastResult_ = args; <span class="hljs-comment">// Save last callback arguments.</span>
+    events.EventEmitter.prototype.emit.apply(<span class="hljs-keyword">this</span>, [<span class="hljs-string">'callback'</span>].concat(args));
 
-    <span class="keyword">if</span> (args[<span class="number">0</span>]) {
-        <span class="keyword">this</span>.backoff_.backoff(args[<span class="number">0</span>]);
-    } <span class="keyword">else</span> {
-        <span class="keyword">this</span>.state_ = FunctionCall.State_.COMPLETED;
-        <span class="keyword">this</span>.doCallback_();
+    <span class="hljs-keyword">if</span> (args[<span class="hljs-number">0</span>]) {
+        <span class="hljs-keyword">this</span>.backoff_.backoff(args[<span class="hljs-number">0</span>]);
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">this</span>.state_ = FunctionCall.State_.COMPLETED;
+        <span class="hljs-keyword">this</span>.doCallback_();
     }
 };</pre></div></div>
             
@@ -477,8 +478,8 @@ for the original callback function.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.handleBackoff_ = <span class="keyword">function</span>(number, delay, err) {
-    <span class="keyword">this</span>.emit(<span class="string">'backoff'</span>, number, delay, err);
+            <div class="content"><div class='highlight'><pre>FunctionCall.prototype.handleBackoff_ = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(number, delay, err)</span> {</span>
+    <span class="hljs-keyword">this</span>.emit(<span class="hljs-string">'backoff'</span>, number, delay, err);
 };
 
 module.exports = FunctionCall;</pre></div></div>

@@ -68,14 +68,15 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <pre><code> Copyright (c) 2012 Mathieu Turcotte
- Licensed under the MIT license.</code></pre>
-
+              <pre><code> Copyright (c) <span class="hljs-number">2012</span> Mathieu Turcotte
+ Licensed under the MIT license.
+</code></pre>
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> util = require(<span class="string">'util'</span>);
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-keyword">var</span> util = <span class="hljs-built_in">require</span>(<span class="hljs-string">'util'</span>);
 
-<span class="keyword">var</span> BackoffStrategy = require(<span class="string">'./strategy'</span>);</pre></div></div>
+<span class="hljs-keyword">var</span> BackoffStrategy = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./strategy'</span>);</pre></div></div>
             
         </li>
         
@@ -90,23 +91,23 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="function"><span class="keyword">function</span> <span class="title">FibonacciBackoffStrategy</span><span class="params">(options)</span> {</span>
-    BackoffStrategy.call(<span class="keyword">this</span>, options);
-    <span class="keyword">this</span>.backoffDelay_ = <span class="number">0</span>;
-    <span class="keyword">this</span>.nextBackoffDelay_ = <span class="keyword">this</span>.getInitialDelay();
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">FibonacciBackoffStrategy</span><span class="hljs-params">(options)</span> {</span>
+    BackoffStrategy.call(<span class="hljs-keyword">this</span>, options);
+    <span class="hljs-keyword">this</span>.backoffDelay_ = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">this</span>.nextBackoffDelay_ = <span class="hljs-keyword">this</span>.getInitialDelay();
 }
 util.inherits(FibonacciBackoffStrategy, BackoffStrategy);
 
-FibonacciBackoffStrategy.prototype.next_ = <span class="keyword">function</span>() {
-    <span class="keyword">var</span> backoffDelay = Math.min(<span class="keyword">this</span>.nextBackoffDelay_, <span class="keyword">this</span>.getMaxDelay());
-    <span class="keyword">this</span>.nextBackoffDelay_ += <span class="keyword">this</span>.backoffDelay_;
-    <span class="keyword">this</span>.backoffDelay_ = backoffDelay;
-    <span class="keyword">return</span> backoffDelay;
+FibonacciBackoffStrategy.prototype.next_ = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">var</span> backoffDelay = <span class="hljs-built_in">Math</span>.min(<span class="hljs-keyword">this</span>.nextBackoffDelay_, <span class="hljs-keyword">this</span>.getMaxDelay());
+    <span class="hljs-keyword">this</span>.nextBackoffDelay_ += <span class="hljs-keyword">this</span>.backoffDelay_;
+    <span class="hljs-keyword">this</span>.backoffDelay_ = backoffDelay;
+    <span class="hljs-keyword">return</span> backoffDelay;
 };
 
-FibonacciBackoffStrategy.prototype.reset_ = <span class="keyword">function</span>() {
-    <span class="keyword">this</span>.nextBackoffDelay_ = <span class="keyword">this</span>.getInitialDelay();
-    <span class="keyword">this</span>.backoffDelay_ = <span class="number">0</span>;
+FibonacciBackoffStrategy.prototype.reset_ = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">this</span>.nextBackoffDelay_ = <span class="hljs-keyword">this</span>.getInitialDelay();
+    <span class="hljs-keyword">this</span>.backoffDelay_ = <span class="hljs-number">0</span>;
 };
 
 module.exports = FibonacciBackoffStrategy;</pre></div></div>

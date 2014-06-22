@@ -68,15 +68,16 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <pre><code> Copyright (c) 2012 Mathieu Turcotte
- Licensed under the MIT license.</code></pre>
-
+              <pre><code> Copyright (c) <span class="hljs-number">2012</span> Mathieu Turcotte
+ Licensed under the MIT license.
+</code></pre>
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> Backoff = require(<span class="string">'./lib/backoff'</span>);
-<span class="keyword">var</span> ExponentialBackoffStrategy = require(<span class="string">'./lib/strategy/exponential'</span>);
-<span class="keyword">var</span> FibonacciBackoffStrategy = require(<span class="string">'./lib/strategy/fibonacci'</span>);
-<span class="keyword">var</span> FunctionCall = require(<span class="string">'./lib/function_call.js'</span>);
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-keyword">var</span> Backoff = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./lib/backoff'</span>);
+<span class="hljs-keyword">var</span> ExponentialBackoffStrategy = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./lib/strategy/exponential'</span>);
+<span class="hljs-keyword">var</span> FibonacciBackoffStrategy = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./lib/strategy/fibonacci'</span>);
+<span class="hljs-keyword">var</span> FunctionCall = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./lib/function_call.js'</span>);
 
 module.exports.Backoff = Backoff;
 module.exports.FunctionCall = FunctionCall;
@@ -96,8 +97,8 @@ module.exports.ExponentialStrategy = ExponentialBackoffStrategy;</pre></div></di
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>module.exports.fibonacci = <span class="keyword">function</span>(options) {
-    <span class="keyword">return</span> <span class="keyword">new</span> Backoff(<span class="keyword">new</span> FibonacciBackoffStrategy(options));
+            <div class="content"><div class='highlight'><pre>module.exports.fibonacci = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(options)</span> {</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Backoff(<span class="hljs-keyword">new</span> FibonacciBackoffStrategy(options));
 };</pre></div></div>
             
         </li>
@@ -113,8 +114,8 @@ module.exports.ExponentialStrategy = ExponentialBackoffStrategy;</pre></div></di
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>module.exports.exponential = <span class="keyword">function</span>(options) {
-    <span class="keyword">return</span> <span class="keyword">new</span> Backoff(<span class="keyword">new</span> ExponentialBackoffStrategy(options));
+            <div class="content"><div class='highlight'><pre>module.exports.exponential = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(options)</span> {</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Backoff(<span class="hljs-keyword">new</span> ExponentialBackoffStrategy(options));
 };</pre></div></div>
             
         </li>
@@ -130,12 +131,12 @@ module.exports.ExponentialStrategy = ExponentialBackoffStrategy;</pre></div></di
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>module.exports.call = <span class="keyword">function</span>(fn, vargs, callback) {
-    <span class="keyword">var</span> args = Array.prototype.slice.call(arguments);
-    fn = args[<span class="number">0</span>];
-    vargs = args.slice(<span class="number">1</span>, args.length - <span class="number">1</span>);
-    callback = args[args.length - <span class="number">1</span>];
-    <span class="keyword">return</span> <span class="keyword">new</span> FunctionCall(fn, vargs, callback);
+            <div class="content"><div class='highlight'><pre>module.exports.call = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(fn, vargs, callback)</span> {</span>
+    <span class="hljs-keyword">var</span> args = <span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>);
+    fn = args[<span class="hljs-number">0</span>];
+    vargs = args.slice(<span class="hljs-number">1</span>, args.length - <span class="hljs-number">1</span>);
+    callback = args[args.length - <span class="hljs-number">1</span>];
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> FunctionCall(fn, vargs, callback);
 };</pre></div></div>
             
         </li>

@@ -68,16 +68,17 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <pre><code> Copyright (c) 2012 Mathieu Turcotte
- Licensed under the MIT license.</code></pre>
-
+              <pre><code> Copyright (c) <span class="hljs-number">2012</span> Mathieu Turcotte
+ Licensed under the MIT license.
+</code></pre>
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> events = require(<span class="string">'events'</span>);
-<span class="keyword">var</span> util = require(<span class="string">'util'</span>);
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-keyword">var</span> events = <span class="hljs-built_in">require</span>(<span class="hljs-string">'events'</span>);
+<span class="hljs-keyword">var</span> util = <span class="hljs-built_in">require</span>(<span class="hljs-string">'util'</span>);
 
-<span class="function"><span class="keyword">function</span> <span class="title">isDef</span><span class="params">(value)</span> {</span>
-    <span class="keyword">return</span> value !== <span class="literal">undefined</span> &amp;&amp; value !== <span class="literal">null</span>;
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isDef</span><span class="hljs-params">(value)</span> {</span>
+    <span class="hljs-keyword">return</span> value !== <span class="hljs-literal">undefined</span> &amp;&amp; value !== <span class="hljs-literal">null</span>;
 }</pre></div></div>
             
         </li>
@@ -101,29 +102,29 @@ object holding the options for the backoff strategy:</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="function"><span class="keyword">function</span> <span class="title">BackoffStrategy</span><span class="params">(options)</span> {</span>
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">BackoffStrategy</span><span class="hljs-params">(options)</span> {</span>
     options = options || {};
 
-    <span class="keyword">if</span> (isDef(options.initialDelay) &amp;&amp; options.initialDelay &lt; <span class="number">1</span>) {
-        <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">'The initial timeout must be greater than 0.'</span>);
-    } <span class="keyword">else</span> <span class="keyword">if</span> (isDef(options.maxDelay) &amp;&amp; options.maxDelay &lt; <span class="number">1</span>) {
-        <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">'The maximal timeout must be greater than 0.'</span>);
+    <span class="hljs-keyword">if</span> (isDef(options.initialDelay) &amp;&amp; options.initialDelay &lt; <span class="hljs-number">1</span>) {
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'The initial timeout must be greater than 0.'</span>);
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isDef(options.maxDelay) &amp;&amp; options.maxDelay &lt; <span class="hljs-number">1</span>) {
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'The maximal timeout must be greater than 0.'</span>);
     }
 
-    <span class="keyword">this</span>.initialDelay_ = options.initialDelay || <span class="number">100</span>;
-    <span class="keyword">this</span>.maxDelay_ = options.maxDelay || <span class="number">10000</span>;
+    <span class="hljs-keyword">this</span>.initialDelay_ = options.initialDelay || <span class="hljs-number">100</span>;
+    <span class="hljs-keyword">this</span>.maxDelay_ = options.maxDelay || <span class="hljs-number">10000</span>;
 
-    <span class="keyword">if</span> (<span class="keyword">this</span>.maxDelay_ &lt;= <span class="keyword">this</span>.initialDelay_) {
-        <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">'The maximal backoff delay must be '</span> +
-                        <span class="string">'greater than the initial backoff delay.'</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.maxDelay_ &lt;= <span class="hljs-keyword">this</span>.initialDelay_) {
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'The maximal backoff delay must be '</span> +
+                        <span class="hljs-string">'greater than the initial backoff delay.'</span>);
     }
 
-    <span class="keyword">if</span> (isDef(options.randomisationFactor) &amp;&amp;
-        (options.randomisationFactor &lt; <span class="number">0</span> || options.randomisationFactor &gt; <span class="number">1</span>)) {
-        <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">'The randomisation factor must be between 0 and 1.'</span>);
+    <span class="hljs-keyword">if</span> (isDef(options.randomisationFactor) &amp;&amp;
+        (options.randomisationFactor &lt; <span class="hljs-number">0</span> || options.randomisationFactor &gt; <span class="hljs-number">1</span>)) {
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'The randomisation factor must be between 0 and 1.'</span>);
     }
 
-    <span class="keyword">this</span>.randomisationFactor_ = options.randomisationFactor || <span class="number">0</span>;
+    <span class="hljs-keyword">this</span>.randomisationFactor_ = options.randomisationFactor || <span class="hljs-number">0</span>;
 }</pre></div></div>
             
         </li>
@@ -139,8 +140,8 @@ object holding the options for the backoff strategy:</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>BackoffStrategy.prototype.getMaxDelay = <span class="keyword">function</span>() {
-    <span class="keyword">return</span> <span class="keyword">this</span>.maxDelay_;
+            <div class="content"><div class='highlight'><pre>BackoffStrategy.prototype.getMaxDelay = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.maxDelay_;
 };</pre></div></div>
             
         </li>
@@ -156,8 +157,8 @@ object holding the options for the backoff strategy:</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>BackoffStrategy.prototype.getInitialDelay = <span class="keyword">function</span>() {
-    <span class="keyword">return</span> <span class="keyword">this</span>.initialDelay_;
+            <div class="content"><div class='highlight'><pre>BackoffStrategy.prototype.getInitialDelay = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.initialDelay_;
 };</pre></div></div>
             
         </li>
@@ -174,11 +175,11 @@ milliseconds.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>BackoffStrategy.prototype.next = <span class="keyword">function</span>() {
-    <span class="keyword">var</span> backoffDelay = <span class="keyword">this</span>.next_();
-    <span class="keyword">var</span> randomisationMultiple = <span class="number">1</span> + Math.random() * <span class="keyword">this</span>.randomisationFactor_;
-    <span class="keyword">var</span> randomizedDelay = Math.round(backoffDelay * randomisationMultiple);
-    <span class="keyword">return</span> randomizedDelay;
+            <div class="content"><div class='highlight'><pre>BackoffStrategy.prototype.next = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">var</span> backoffDelay = <span class="hljs-keyword">this</span>.next_();
+    <span class="hljs-keyword">var</span> randomisationMultiple = <span class="hljs-number">1</span> + <span class="hljs-built_in">Math</span>.random() * <span class="hljs-keyword">this</span>.randomisationFactor_;
+    <span class="hljs-keyword">var</span> randomizedDelay = <span class="hljs-built_in">Math</span>.round(backoffDelay * randomisationMultiple);
+    <span class="hljs-keyword">return</span> randomizedDelay;
 };</pre></div></div>
             
         </li>
@@ -195,8 +196,8 @@ subclasses.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>BackoffStrategy.prototype.next_ = <span class="keyword">function</span>() {
-    <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">'BackoffStrategy.next_() unimplemented.'</span>);
+            <div class="content"><div class='highlight'><pre>BackoffStrategy.prototype.next_ = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'BackoffStrategy.next_() unimplemented.'</span>);
 };</pre></div></div>
             
         </li>
@@ -212,8 +213,8 @@ subclasses.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>BackoffStrategy.prototype.reset = <span class="keyword">function</span>() {
-    <span class="keyword">this</span>.reset_();
+            <div class="content"><div class='highlight'><pre>BackoffStrategy.prototype.reset = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">this</span>.reset_();
 };</pre></div></div>
             
         </li>
@@ -230,8 +231,8 @@ subclasses.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>BackoffStrategy.prototype.reset_ = <span class="keyword">function</span>() {
-    <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">'BackoffStrategy.reset_() unimplemented.'</span>);
+            <div class="content"><div class='highlight'><pre>BackoffStrategy.prototype.reset_ = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'BackoffStrategy.reset_() unimplemented.'</span>);
 };
 
 module.exports = BackoffStrategy;</pre></div></div>
