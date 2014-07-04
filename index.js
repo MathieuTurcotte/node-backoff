@@ -14,7 +14,7 @@ module.exports.ExponentialStrategy = ExponentialBackoffStrategy;
 // Constructs a Fibonacci backoff.
 module.exports.fibonacci = function(options) {
     var result = new Backoff(new FibonacciBackoffStrategy(options));
-    if(options.failAfter) {
+    if(options && options.failAfter) {
         result.failAfter(options.failAfter);
     }
     return result;
@@ -23,7 +23,7 @@ module.exports.fibonacci = function(options) {
 // Constructs an exponential backoff.
 module.exports.exponential = function(options) {
     var result = new Backoff(new ExponentialBackoffStrategy(options));
-    if(options.failAfter) {
+    if(options && options.failAfter) {
         result.failAfter(options.failAfter);
     }
     return result;
