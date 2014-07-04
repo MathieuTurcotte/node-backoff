@@ -16,7 +16,7 @@ module.exports.fibonacci = function(options) {
     var result = new Backoff(new FibonacciBackoffStrategy(options));
     if(options.failAfter) {
         result.failAfter(options.failAfter);
-    };
+    }
     return result;
 };
 
@@ -25,7 +25,7 @@ module.exports.exponential = function(options) {
     var result = new Backoff(new ExponentialBackoffStrategy(options));
     if(options.failAfter) {
         result.failAfter(options.failAfter);
-    };
+    }
     return result;
 };
 
