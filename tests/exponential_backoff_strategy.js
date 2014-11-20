@@ -43,5 +43,21 @@ exports["ExponentialBackoffStrategy"] = {
         test.equals(backoffDelay, 10,
             'Strategy should return the initial delay after reset.');
         test.done();
+    },
+
+    "backoff delay factor should be configurable": function (test) {
+        var expectedDelays = [10, 30, 90, 90];
+        var strategy = new ExponentialBackoffStrategy({
+            initialDelay: 10,
+            maxDelay: 90,
+            factor: 3
+        });
+        var actualDelays = expectedDelays.map(function () {
+            return strategy.next();
+        });
+
+        test.deepEqual(expectedDelays, actualDelays,
+            'Generated delays should follow a configurable exponential sequence.');
+        test.done();
     }
 };
