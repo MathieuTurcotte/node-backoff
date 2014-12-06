@@ -24,8 +24,9 @@
     "engines": {
         "node": ">= 0.6"
     },
-    "file": [
+    "files": [
         "index.js",
-        "lib"
+        "lib",
+        "tests"
     ]
 }
