@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.4.1
+
+- Add support for specifying the factor to use in the `ExponentialStrategy`.
+
 ## 2.4.0
 
 - Replace `FunctionCall.getResults` by `FunctionCall.getLastResult` to avoid
