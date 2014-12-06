@@ -75,6 +75,7 @@
             
             <div class="content"><div class='highlight'><pre>
 <span class="hljs-keyword">var</span> util = <span class="hljs-built_in">require</span>(<span class="hljs-string">'util'</span>);
+<span class="hljs-keyword">var</span> precond = <span class="hljs-built_in">require</span>(<span class="hljs-string">'precond'</span>);
 
 <span class="hljs-keyword">var</span> BackoffStrategy = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./strategy'</span>);</pre></div></div>
             
@@ -95,12 +96,37 @@
     BackoffStrategy.call(<span class="hljs-keyword">this</span>, options);
     <span class="hljs-keyword">this</span>.backoffDelay_ = <span class="hljs-number">0</span>;
     <span class="hljs-keyword">this</span>.nextBackoffDelay_ = <span class="hljs-keyword">this</span>.getInitialDelay();
+    <span class="hljs-keyword">this</span>.factor_ = ExponentialBackoffStrategy.DEFAULT_FACTOR;
+
+    <span class="hljs-keyword">if</span> (options &amp;&amp; options.factor !== <span class="hljs-literal">undefined</span>) {
+        precond.checkArgument(options.factor &gt; <span class="hljs-number">1</span>,
+            <span class="hljs-string">'Exponential factor should be greater than 1 but got %s.'</span>,
+            options.factor);
+        <span class="hljs-keyword">this</span>.factor_ = options.factor;
+    }
 }
-util.inherits(ExponentialBackoffStrategy, BackoffStrategy);
+util.inherits(ExponentialBackoffStrategy, BackoffStrategy);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Default multiplication factor used to compute the next backoff delay from
+the current one. The value can be overridden by passing a custom factor as
+part of the options.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>ExponentialBackoffStrategy.DEFAULT_FACTOR = <span class="hljs-number">2</span>;
 
 ExponentialBackoffStrategy.prototype.next_ = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
     <span class="hljs-keyword">this</span>.backoffDelay_ = <span class="hljs-built_in">Math</span>.min(<span class="hljs-keyword">this</span>.nextBackoffDelay_, <span class="hljs-keyword">this</span>.getMaxDelay());
-    <span class="hljs-keyword">this</span>.nextBackoffDelay_ = <span class="hljs-keyword">this</span>.backoffDelay_ * <span class="hljs-number">2</span>;
+    <span class="hljs-keyword">this</span>.nextBackoffDelay_ = <span class="hljs-keyword">this</span>.backoffDelay_ * <span class="hljs-keyword">this</span>.factor_;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.backoffDelay_;
 };
 

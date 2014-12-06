@@ -110,7 +110,15 @@ call.start();
 
 Constructs a Fibonacci backoff (10, 10, 20, 30, 50, etc.).
 
-See bellow for options description.
+The options are the following.
+
+- randomisationFactor: defaults to 0, must be between 0 and 1
+- initialDelay: defaults to 100 ms
+- maxDelay: defaults to 10000 ms
+
+With these values, the backoff delay will increase from 100 ms to 10000 ms. The
+randomisation factor controls the range of randomness and must be between 0
+and 1. By default, no randomisation is applied on the backoff delay.
 
 ### backoff.exponential([options])
 
@@ -121,6 +129,7 @@ The options are the following.
 - randomisationFactor: defaults to 0, must be between 0 and 1
 - initialDelay: defaults to 100 ms
 - maxDelay: defaults to 10000 ms
+- factor: defaults to 2, must be greater than 1
 
 With these values, the backoff delay will increase from 100 ms to 10000 ms. The
 randomisation factor controls the range of randomness and must be between 0
@@ -229,6 +238,7 @@ The options are the following.
 - randomisationFactor: defaults to 0, must be between 0 and 1
 - initialDelay: defaults to 100 ms
 - maxDelay: defaults to 10000 ms
+- factor: defaults to 2, must be greater than 1
 
 ### Class FibonacciStrategy
 
@@ -298,9 +308,9 @@ Retrieves the last intermediary result returned by the wrapped function. This
 method can be called at any point in time during the call life cycle, i.e.
 before, during and after the wrapped function invocation.
 
-Returns an array containing the results returned by the last wrapped function
-call. For example, to get the error code returned by the last call, one would
-do the following.
+Returns an array containing the arguments passed to the completion callback of
+the wrapped function. For example, to get the error code returned by the last
+call, one would do the following.
 
 ``` js
 var results = call.getLastResult();
