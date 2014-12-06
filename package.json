@@ -1,7 +1,7 @@
 {
     "name": "backoff",
     "description": "Fibonacci and exponential backoffs.",
-    "version": "2.4.0",
+    "version": "2.4.1",
     "license": "MIT",
     "author": "Mathieu Turcotte <turcotte.mat@gmail.com>",
     "keywords": ["backoff", "retry", "fibonacci", "exponential"],
