@@ -304,12 +304,8 @@ be thrown..
 
 #### call.getLastResult()
 
-Retrieves the last intermediary result returned by the wrapped function. This
-method can be called at any point in time during the call life cycle, i.e.
-before, during and after the wrapped function invocation.
-
-Returns an array containing the arguments passed to the completion callback of
-the wrapped function. For example, to get the error code returned by the last
+Returns an array containing the last arguments passed to the completion callback
+of the wrapped function. For example, to get the error code returned by the last
 call, one would do the following.
 
 ``` js
@@ -317,6 +313,9 @@ var results = call.getLastResult();
 // The error code is the first parameter of the callback.
 var error = results[0];
 ```
+
+Note that if the call was aborted, it will contain the abort error and not the
+last error returned by the wrapped function.
 
 #### call.getNumRetries()
 
@@ -330,14 +329,11 @@ before, during and after the wrapped function invocation.
 Initiates the call the wrapped function. This method should only be called
 once otherwise an exception will be thrown.
 
-
 #### call.abort()
 
-Aborts the call.
-
-The last result can be retrieved using `call.getLastResult()`. This method
-can be called at any point in time during the call life cycle, i.e. before,
-during and after the wrapped function invocation.
+Aborts the call and causes the completion callback to be invoked with an abort
+error if the call was pending or running; does nothing otherwise. This method
+can safely be called mutliple times.
 
 #### Event: 'call'
 
@@ -358,6 +354,10 @@ Emitted each time the wrapped function invokes its callback.
 - err: the error that triggered the backoff operation
 
 Emitted each time a backoff operation is started.
+
+#### Event: 'abort'
+
+Emitted when a call is aborted.
 
 ## Annotated source code
 

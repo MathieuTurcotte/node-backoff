@@ -132,11 +132,11 @@ exports["FunctionCall"] = {
     },
 
     "failAfter should not be set by default": function(test) {
-		var call = new FunctionCall(this.wrappedFn, [], this.callback);
-        call.start(this.backoffFactory);
-        test.equal(0, this.backoff.failAfter.callCount);
-		test.done();
-	},
+        var call = new FunctionCall(this.wrappedFn, [], this.callback);
+            call.start(this.backoffFactory);
+            test.equal(0, this.backoff.failAfter.callCount);
+        test.done();
+    },
 
     "failAfter should be used as the maximum number of backoffs": function(test) {
         var failAfterValue = 99;
@@ -236,8 +236,27 @@ exports["FunctionCall"] = {
 
         call.start(this.backoffFactory);
 
-        test.equals(this.callback.callCount, 0,
+        test.equals(this.callback.callCount, 1,
             'Wrapped function\'s callback shouldn\'t be called after abort.');
+        test.ok(this.callback.calledWithMatch(sinon.match(function (err) {
+            return !!err.message.match(/Backoff aborted/);
+        }, "abort error")));
+        test.done();
+    },
+
+    "abort event is emitted once when abort is called": function(test) {
+        var call = new FunctionCall(this.wrappedFn, [], this.callback);
+        this.wrappedFn.yields(new Error());
+        var callEventSpy = sinon.spy();
+
+        call.on('abort', callEventSpy);
+        call.start(this.backoffFactory);
+
+        call.abort();
+        call.abort();
+        call.abort();
+
+        test.equals(callEventSpy.callCount, 1);
         test.done();
     },
 

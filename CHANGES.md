@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.X
+
+Those changes are not released yet.
+
+- In the functional API, invoke the wrapped function callback on abort and emit
+  an `abort` event. This makes it possible to detect when abort is called.
+
 ## 2.4.1
 
 - Add support for specifying the factor to use in the `ExponentialStrategy`.
