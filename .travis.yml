@@ -5,8 +5,8 @@ before_install:
   - npm install -g jshint
 
 node_js:
-  - "0.8"
-  - "0.10"
+  - "node"
+  - "iojs"
 
 notifications:
   email:
