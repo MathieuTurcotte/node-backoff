@@ -173,7 +173,7 @@ Starts a backoff operation. If provided, the error parameter will be emitted
 as the last argument of the `backoff` and `fail` events to let the listeners
 know why the backoff operation was attempted.
 
-An error will be thrown an error if a backoff operation is already in progress.
+An error will be thrown if a backoff operation is already in progress.
 
 In practice, this method should be called after a failed attempt to perform a
 sensitive operation (connecting to a database, downloading a resource over the
