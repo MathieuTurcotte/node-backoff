@@ -228,6 +228,33 @@ exports["FunctionCall"] = {
         test.done();
     },
 
+    "call should fail when the retry predicate returns false": function(test) {
+        var call = new FunctionCall(this.wrappedFn, [1, 2, 3], this.callback);
+		call.retryIf(function(err) { return err.retriable; });
+
+		var retriableError = new Error();
+		retriableError.retriable = true;
+
+		var fatalError = new Error();
+		fatalError.retriable = false;
+
+        this.wrappedFn.
+            onCall(0).yields(retriableError).
+            onCall(1).yields(retriableError).
+            onCall(2).yields(fatalError);
+
+        call.start(this.backoffFactory);
+
+        for (var i = 0; i < 2; i++) {
+            this.backoff.emit('ready');
+        }
+
+        test.equals(this.callback.callCount, 1);
+        test.ok(this.callback.calledWith(fatalError));
+        test.ok(this.wrappedFn.alwaysCalledWith(1, 2, 3));
+        test.done();
+	},
+
     "wrapped function's callback shouldn't be called after abort": function(test) {
         var call = new FunctionCall(function(callback) {
             call.abort(); // Abort in middle of wrapped function's execution.

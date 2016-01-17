@@ -99,6 +99,7 @@ var call = backoff.call(get, 'https://duplika.ca/', function(err, res) {
     }
 });
 
+call.retryIf(function(err) { return err.status == 503; });
 call.setStrategy(new backoff.ExponentialStrategy());
 call.failAfter(10);
 call.start();
@@ -301,6 +302,19 @@ there is no limit on the number of backoffs that can be performed.
 
 This method should be called before `call.start()` otherwise an exception will
 be thrown..
+
+#### call.retryIf(predicate)
+
+- predicate: a function which takes in as its argument the error returned
+by the wrapped function and determines whether it is retriable.
+
+Sets the predicate which will be invoked to determine whether a given error
+should be retried or not, e.g. a network error would be retriable while a type
+error would stop the function call. By default, all errors are considered to be
+retriable.
+
+This method should be called before `call.start()` otherwise an exception will
+be thrown.
 
 #### call.getLastResult()
 
