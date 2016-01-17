@@ -6,6 +6,9 @@ Those changes are not released yet.
 
 - In the functional API, invoke the wrapped function callback on abort and emit
   an `abort` event. This makes it possible to detect when abort is called.
+- Add a method on the function API, `call.retryIf(predicate)`, which specifies
+  a predicate used to determine whether a given error is retriable or not. The
+  default behavior is unaffected, errors remain retriable by default.
 
 ## 2.4.1
 
