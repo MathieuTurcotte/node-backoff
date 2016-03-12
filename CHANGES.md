@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.X
+## 2.5.0
 
 Those changes are not released yet.
 
