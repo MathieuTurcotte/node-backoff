@@ -243,7 +243,7 @@ The options are the following.
 
 ### Class FibonacciStrategy
 
-Fibonnaci (10, 10, 20, 30, 50, etc.) backoff strategy implementation.
+Fibonacci (10, 10, 20, 30, 50, etc.) backoff strategy implementation.
 
 #### new FibonacciStrategy([options])
 
