@@ -4,10 +4,12 @@
 var Backoff = require('./lib/backoff');
 var ExponentialBackoffStrategy = require('./lib/strategy/exponential');
 var FibonacciBackoffStrategy = require('./lib/strategy/fibonacci');
+var LinearBackoffStrategy = require('./lib/strategy/linear');
 var FunctionCall = require('./lib/function_call.js');
 
 module.exports.Backoff = Backoff;
 module.exports.FunctionCall = FunctionCall;
+module.exports.LinearStrategy = LinearBackoffStrategy;
 module.exports.FibonacciStrategy = FibonacciBackoffStrategy;
 module.exports.ExponentialStrategy = ExponentialBackoffStrategy;
 
