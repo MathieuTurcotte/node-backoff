@@ -16,6 +16,7 @@ function MockBackoff() {
     this.reset = sinon.spy();
     this.backoff = sinon.spy();
     this.failAfter = sinon.spy();
+    this.failAfterTime = sinon.spy();
 }
 util.inherits(MockBackoff, events.EventEmitter);
 
@@ -154,6 +155,33 @@ exports["FunctionCall"] = {
         call.start(this.backoffFactory);
         test.throws(function() {
             call.failAfter(1234);
+        }, /in progress/);
+        test.done();
+    },
+
+    "failAfterTime should not be set by default": function(test) {
+        var call = new FunctionCall(this.wrappedFn, [], this.callback);
+            call.start(this.backoffFactory);
+            test.equal(0, this.backoff.failAfterTime.callCount);
+        test.done();
+    },
+
+    "failAfterTime should be used as the maximum time": function(test) {
+        var failAfterTimeValue = 99;
+        var call = new FunctionCall(this.wrappedFn, [], this.callback);
+        call.failAfterTime(failAfterTimeValue);
+        call.start(this.backoffFactory);
+        test.ok(this.backoff.failAfterTime.calledWith(failAfterTimeValue),
+            'User defined maximum time shoud be ' +
+            'used to configure the backoff instance.');
+        test.done();
+    },
+
+    "failAfterTime should throw if the call is in progress": function(test) {
+        var call = new FunctionCall(this.wrappedFn, [], this.callback);
+        call.start(this.backoffFactory);
+        test.throws(function() {
+            call.failAfterTime(1234);
         }, /in progress/);
         test.done();
     },

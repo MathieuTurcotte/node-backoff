@@ -168,6 +168,16 @@ Sets a limit on the maximum number of backoffs that can be performed before
 a fail event gets emitted and the backoff instance is reset. By default, there
 is no limit on the number of backoffs that can be performed.
 
+#### backoff.failAfterTime(maxTotalTime)
+
+- maxTotalTime: maximum time (in milliseconds) before the fail event gets
+emitted upon backoff, must be greater than 0
+
+Sets a limit on the maximum amount of time from the start of the first backoff
+before attempting to backoff will emit a fail event and reset the backoff
+instance.  The last backoff before the limit is reached will be truncated to
+avoid exceeding the limit.  By default, there is no time limit.
+
 #### backoff.backoff([err])
 
 Starts a backoff operation. If provided, the error parameter will be emitted

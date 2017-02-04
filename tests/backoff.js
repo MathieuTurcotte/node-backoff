@@ -91,6 +91,80 @@ exports["Backoff"] = {
         test.done();
     },
 
+    "the fail event should be emitted when time limit is reached": function(test) {
+        var err = new Error('Fail');
+
+        this.backoffStrategy.next.returns(10);
+        this.backoff.on('fail', this.spy);
+
+        this.backoff.failAfterTime(20);
+
+        // Consume first 2 backoffs so limit is reached.
+        for (var i = 0; i < 2; i++) {
+            this.backoff.backoff();
+            this.clock.tick(10);
+        }
+
+        // Failure should occur on the third call, and not before.
+        test.ok(!this.spy.calledOnce, 'Fail event shouldn\'t have been emitted.');
+        this.backoff.backoff(err);
+        test.ok(this.spy.calledOnce, 'Fail event should have been emitted.');
+        test.equal(this.spy.getCall(0).args[0], err, 'Error should be passed');
+
+        test.done();
+    },
+
+    "time limit should include all time": function(test) {
+        var err = new Error('Fail');
+
+        this.backoffStrategy.next.returns(10);
+        this.backoff.on('fail', this.spy);
+
+        this.backoff.failAfterTime(15);
+
+        // Time is started from first backoff.
+        this.backoff.backoff();
+
+        this.clock.tick(15);
+
+        // Failure should occur when backoff is called, and not before.
+        test.ok(!this.spy.calledOnce, 'Fail event shouldn\'t have been emitted.');
+        this.backoff.backoff(err);
+        test.ok(this.spy.calledOnce, 'Fail event should have been emitted.');
+        test.equal(this.spy.getCall(0).args[0], err, 'Error should be passed');
+
+        test.done();
+    },
+
+    "last backoff time should be reduced by time limit": function(test) {
+        var err = new Error('Fail');
+
+        this.backoffStrategy.next.returns(10);
+
+        var failSpy = new sinon.spy();
+        this.backoff.on('backoff', this.spy);
+        this.backoff.on('fail', failSpy);
+
+        this.backoff.failAfterTime(25);
+
+        // Consume first 2 backoffs.
+        for (var i = 0; i < 2; i++) {
+            this.backoff.backoff();
+            this.clock.tick(10);
+        }
+
+        test.equals(this.spy.callCount, 2, 'Backoff occurs normally before time limit.');
+        this.backoff.backoff();
+        this.clock.tick(5);
+        test.equals(this.spy.callCount, 3, 'Last backoff is truncated by the time limit.');
+        test.equals(failSpy.callCount, 0, 'Fail does not occur before time limit.');
+        this.backoff.backoff(err);
+        test.ok(failSpy.calledOnce, 'Fail event should have been emitted.');
+        test.equal(failSpy.getCall(0).args[0], err, 'Error should be passed');
+
+        test.done();
+    },
+
     "calling backoff while a backoff is in progress should throw an error": function(test) {
         this.backoffStrategy.next.returns(10);
         var backoff = this.backoff;
@@ -108,6 +182,14 @@ exports["Backoff"] = {
         var backoff = this.backoff;
         test.throws(function() {
             backoff.failAfter(0);
+        }, /greater than 0 but got 0/);
+        test.done();
+    },
+
+    "time limit should be greater than 0": function(test) {
+        var backoff = this.backoff;
+        test.throws(function() {
+            backoff.failAfterTime(0);
         }, /greater than 0 but got 0/);
         test.done();
     },
@@ -136,6 +218,20 @@ exports["Backoff"] = {
         this.backoffStrategy.next.returns(10);
 
         this.backoff.failAfter(1);
+
+        this.backoff.backoff();
+        this.clock.tick(10);
+        this.backoff.backoff();
+
+        test.ok(this.backoffStrategy.reset.calledOnce,
+            'Backoff should have been resetted after failure.');
+        test.done();
+    },
+
+    "backoff should be reset after time fail": function(test) {
+        this.backoffStrategy.next.returns(10);
+
+        this.backoff.failAfterTime(1);
 
         this.backoff.backoff();
         this.clock.tick(10);
