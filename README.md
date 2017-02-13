@@ -168,6 +168,15 @@ Sets a limit on the maximum number of backoffs that can be performed before
 a fail event gets emitted and the backoff instance is reset. By default, there
 is no limit on the number of backoffs that can be performed.
 
+#### backoff.resetInterval(intervalMilliseconds)
+
+- intervalMilliseconds: Time after which the backoff strategy will reset
+after a failure.
+
+If the given time has passed between two consecutive calls to
+`backoff`, `reset` will be automatically called before executing the
+second backoff. By default, there is no automatic reset.
+
 #### backoff.backoff([err])
 
 Starts a backoff operation. If provided, the error parameter will be emitted

@@ -162,5 +162,27 @@ exports["Backoff"] = {
         test.deepEqual(expectedNumbers, actualNumbers,
             'Backoff number should increase from 0 to N - 1.');
         test.done();
+    },
+
+    "backoff reset interval should be greater than 0": function(test) {
+        var backoff = this.backoff;
+        test.throws(function() {
+            backoff.resetInterval(0);
+        }, /greater than 0 but got 0/);
+        test.done();
+    },
+
+    "backoff should be reset after reset interval": function(test) {
+        this.backoffStrategy.next.returns(10);
+
+        this.backoff.resetInterval(5);
+
+        this.backoff.backoff();
+        this.clock.tick(10);
+        this.backoff.backoff();
+
+        test.ok(this.backoffStrategy.reset.calledOnce,
+            'Backoff should have been resetted after time reset interval.');
+        test.done();
     }
 };
