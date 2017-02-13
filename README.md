@@ -190,6 +190,10 @@ In practice, this method should be called after having successfully completed
 the sensitive operation guarded by the backoff instance or if the client code
 request to stop any reconnection attempt.
 
+#### backoff.inProgress()
+
+Returns a boolean telling if a backoff is already in progress.
+
 #### Event: 'backoff'
 
 - number: number of backoffs since last reset, starting at 0
