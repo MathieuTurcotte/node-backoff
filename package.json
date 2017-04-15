@@ -14,7 +14,8 @@
     },
     "devDependencies": {
         "sinon": "1.10",
-        "nodeunit": "0.9"
+        "nodeunit": "0.9",
+        "@types/node": "^7.0.12"
     },
     "scripts": {
         "docco" : "docco lib/*.js lib/strategy/* index.js",
