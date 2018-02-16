@@ -4,6 +4,7 @@
 var Backoff = require('./lib/backoff');
 var ExponentialBackoffStrategy = require('./lib/strategy/exponential');
 var FibonacciBackoffStrategy = require('./lib/strategy/fibonacci');
+var InverseExponentialBackoffStrategy = require('./lib/strategy/inverse_exponential');
 var FunctionCall = require('./lib/function_call.js');
 
 module.exports.Backoff = Backoff;
@@ -19,6 +20,11 @@ module.exports.fibonacci = function(options) {
 // Constructs an exponential backoff.
 module.exports.exponential = function(options) {
     return new Backoff(new ExponentialBackoffStrategy(options));
+};
+
+// Constructs an inverse exponential backoff.
+module.exports.inverseExponential = function(options) {
+    return new Backoff(new InverseExponentialBackoffStrategy(options));
 };
 
 // Constructs a FunctionCall for the given function and arguments.
