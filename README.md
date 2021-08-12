@@ -113,7 +113,7 @@ Constructs a Fibonacci backoff (10, 10, 20, 30, 50, etc.).
 
 The options are the following.
 
-- randomisationFactor: defaults to 0, must be between 0 and 1
+- randomizationFactor: defaults to 0, must be between 0 and 1
 - initialDelay: defaults to 100 ms
 - maxDelay: defaults to 10000 ms
 
@@ -127,7 +127,7 @@ Constructs an exponential backoff (10, 20, 40, 80, etc.).
 
 The options are the following.
 
-- randomisationFactor: defaults to 0, must be between 0 and 1
+- randomizationFactor: defaults to 0, must be between 0 and 1
 - initialDelay: defaults to 100 ms
 - maxDelay: defaults to 10000 ms
 - factor: defaults to 2, must be greater than 1
@@ -236,7 +236,7 @@ Exponential (10, 20, 40, 80, etc.) backoff strategy implementation.
 
 The options are the following.
 
-- randomisationFactor: defaults to 0, must be between 0 and 1
+- randomizationFactor: defaults to 0, must be between 0 and 1
 - initialDelay: defaults to 100 ms
 - maxDelay: defaults to 10000 ms
 - factor: defaults to 2, must be greater than 1
@@ -249,7 +249,7 @@ Fibonacci (10, 10, 20, 30, 50, etc.) backoff strategy implementation.
 
 The options are the following.
 
-- randomisationFactor: defaults to 0, must be between 0 and 1
+- randomizationFactor: defaults to 0, must be between 0 and 1
 - initialDelay: defaults to 100 ms
 - maxDelay: defaults to 10000 ms
 
