@@ -32,7 +32,7 @@ delay.
 var backoff = require('backoff');
 
 var fibonacciBackoff = backoff.fibonacci({
-    randomisationFactor: 0,
+    randomizationFactor: 0,
     initialDelay: 10,
     maxDelay: 300
 });
